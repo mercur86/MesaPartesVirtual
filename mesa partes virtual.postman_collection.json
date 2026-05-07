@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "4403f55c-d47e-44db-aedf-348a1e53a2e9",
+		"name": "mesa partes virtual",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25410179"
+	},
+	"item": [
+		{
+			"name": "tipoDocumentos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/public/listaTipoDocumento",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"public",
+						"listaTipoDocumento"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "expediente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nuAnnExp\": \"2025\",\r\n  \"nuSecExp\": \"\", \r\n  \"feExp\": \"2025-11-17T15:30:00\",\r\n  \"feVence\": \"2025-12-17T15:30:00\",\r\n  \"coProceso\": \"PROC\",\r\n  \"deDetalle\": \"Expediente de prueba generado desde Postman\",\r\n  \"coDepEmi\": \"DEP01\",\r\n  \"nuCorrExp\": \"000001\",\r\n  \"nuExpediente\": \"EXP-2025-000001\",\r\n  \"nuFolios\": 25,\r\n  \"nuPlazo\": 30,\r\n  \"usCreaAudi\": \"alexis\",\r\n  \"usModiAudi\": \"alexis\",\r\n  \"esEstado\": \"0\",\r\n  \"coTipoExp\": \"01\",\r\n  \"clave\": \"\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/public/expediente",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"public",
+						"expediente"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remito",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"documento\": {\r\n    \"nuAnn\": \"2025\",\r\n    \"nuDoc\": 12345,\r\n    \"deAsu\": \"Solicitud de prueba\",\r\n    \"nuDiaAte\": 10,\r\n    \"deObservacion\": \"Observación de prueba\",\r\n    \"coUseMod\": \"alexis\",\r\n    \"coTipDocAdm\": \"001\",\r\n    \"nuCorDoc\": 1,\r\n    \"deDocSig\": \"SIG-001\",\r\n    \"nuFolios\": 5\r\n  },\r\n  \"expediente\": {\r\n    \"nuCorrExp\": \"000002\",\r\n    \"feExp\": \"2025-11-17T15:30:00\",\r\n    \"nuAnnExp\": \"2025\",\r\n    \"nuSecExp\": \"0000000001\"\r\n  },\r\n  \"remitente\": {\r\n    \"coLocEmi\": \"001\",\r\n    \"coDepEmi\": \"00042\",\r\n    \"coDep\":\"00042\",\r\n    \"tiEmi\": \"03\",\r\n    \"nuDni\": \"12345678\",\r\n    \"coEmpEmi\": \"00000\",\r\n    \"nuRuc\": \"12345678901\",\r\n    \"coOtros\": \"OTR01\",\r\n    \"coEmpRes\": \"00000\",\r\n    \"telefono\": \"987654321\",\r\n    \"idDepartamento\": \"01\",\r\n    \"idProvincia\": \"01\",\r\n    \"idDistrito\": \"01\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/public/remito",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"public",
+						"remito"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"documento\": {\r\n    \"nuAnn\": \"2025\",\r\n    \"nuDoc\": 12345,\r\n    \"deAsu\": \"Solicitud de prueba\",\r\n    \"nuDiaAte\": 10,\r\n    \"deObservacion\": \"Observación de prueba\",\r\n    \"coUseMod\": \"alexis\",\r\n    \"coTipDocAdm\": \"001\",\r\n    \"nuCorDoc\": 1,\r\n    \"deDocSig\": \"SIG-001\",\r\n    \"nuFolios\": 5\r\n  },\r\n  \"expediente\": {\r\n    \"nuCorrExp\": \"000002\",\r\n    \"feExp\": \"2025-11-17T15:30:00\",\r\n    \"nuAnnExp\": \"2025\",\r\n    \"nuSecExp\": \"0000000001\"\r\n  },\r\n  \"remitente\": {\r\n    \"coLocEmi\": \"001\",\r\n    \"coDepEmi\": \"00042\",\r\n    \"coDep\":\"00042\",\r\n    \"tiEmi\": \"03\",\r\n    \"nuDni\": \"12345678\",\r\n    \"coEmpEmi\": \"00000\",\r\n    \"nuRuc\": \"12345678901\",\r\n    \"coOtros\": \"OTR01\",\r\n    \"coEmpRes\": \"00000\",\r\n    \"telefono\": \"987654321\",\r\n    \"idDepartamento\": \"01\",\r\n    \"idProvincia\": \"01\",\r\n    \"idDistrito\": \"01\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/public/remito",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"public",
+						"remito"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

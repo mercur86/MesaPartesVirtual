@@ -1,0 +1,213 @@
+<p-toast />
+<p-card header="Persona Natural" class="w-full md:max-w-5xl mx-auto mt-6 p-4">
+    <ng-template pTemplate="header">
+        <div class="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
+            <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">Persona Natural</span>
+            <p-button icon="pi pi-home" [rounded]="true" [text]="true" severity="secondary" pTooltip="Volver al inicio"
+                tooltipPosition="left" (click)="volverAlInicio()" />
+        </div>
+    </ng-template>
+
+    <div class="w-full overflow-x-auto">
+        <p-stepper [value]="1" class="w-full min-w-[18rem] max-w-full" [linear]="false">
+            <p-step-list class="flex flex-wrap justify-center text-sm md:text-base">
+                <p-step [value]="1">Datos Personales</p-step>
+                <p-step [value]="2">Documentos</p-step>
+                <p-step [value]="3">Final</p-step>
+            </p-step-list>
+
+            <p-step-panels>
+                <!-- PANEL 1 -->
+                <p-step-panel [value]="1">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div
+                            class="dark:border-surface-700 rounded-2xl bg-gray-100 dark:bg-surface-950 flex flex-col md:flex-row flex-wrap gap-6 p-6">
+                            <!-- CARD IZQUIERDA -->
+                            <p-card class="p-5 w-full md:w-1/3 flex-shrink-0 bg-white shadow-md rounded-lg ">
+                                <form #reniecForm="ngForm" (ngSubmit)="onSubmitReniec(reniecForm)">
+                                    <div class="flex flex-col">
+                                        <label>Tipo Documento *</label>
+                                        <p-select [options]="documentosIdentidad"
+                                            [(ngModel)]="selectedDocumentoIdentidad" name="tipoDocumento"
+                                            optionLabel="name" #tipoDocumento="ngModel"
+                                            placeholder="Seleccione documento" class="w-full mt-1" id="tipoDocumento"
+                                            required />
+                                        @if (tipoDocumento.invalid && (tipoDocumento.touched || reniecForm.submitted)){
+                                        <p-message severity="error" size="small" variant="simple">Seleccione un tipo de
+                                            documento</p-message>
+                                        }
+                                        <label class="mt-4">Nro de Documento *</label>
+                                        <input pInputText id="nroDocumento" name="nroDocumento" class="w-full mt-1"
+                                            [(ngModel)]="persona.document_number" #numerodoc="ngModel"
+                                            [invalid]="numerodoc.invalid && (numerodoc.touched || reniecForm.submitted)"
+                                            minlength="8" maxlength="8" required />
+                                        @if (numerodoc.invalid && (numerodoc.touched || reniecForm.submitted)){
+                                        <p-message severity="error" size="small" variant="simple">Ingrese un número de
+                                            documento</p-message>
+                                        }
+                                        <div class="mt-4">
+                                            <p-button label="Validar documento" icon="pi pi-search" class="w-full"
+                                                [fluid]="true" type="submit" />
+                                        </div>
+
+                                        <div class="mt-4 w-full">
+                                            <div
+                                                class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded">
+                                                <p class="font-semibold">IMPORTANTE:</p>
+                                                <p class="text-sm mt-1">
+                                                    Si los datos no se completan automáticamente, por favor continúe
+                                                    ingresando manualmente la
+                                                    información requerida.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </p-card>
+
+                            <!-- CARD DERECHA -->
+                            <p-card class="p-5 w-full md:flex-1 bg-white shadow-md rounded-lg">
+                                <form #personaForm="ngForm">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Primer Apellido *</label>
+                                            <input pInputText type="text" class="w-full p-2 border"
+                                                [(ngModel)]="persona.first_last_name" name="first_last_name"
+                                                [invalid]="first_last_name.invalid && (first_last_name.touched)"
+                                                #first_last_name="ngModel" required />
+                                            @if (first_last_name.invalid && (first_last_name.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Ingrese Apellido
+                                                paterno</p-message>
+                                            }
+
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Segundo Apellido *</label>
+                                            <input pInputText type="text" class="w-full p-2 border"
+                                                [(ngModel)]="persona.second_last_name" name="second_last_name"
+                                                [invalid]="second_last_name.invalid && (second_last_name.touched)"
+                                                #second_last_name="ngModel" required />
+                                            @if (second_last_name.invalid && (second_last_name.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Ingrese Apellido
+                                                materno</p-message>
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label class="block text-sm font-semibold mb-1">Nombres *</label>
+                                        <input pInputText type="text" class="w-full p-2 border"
+                                            [(ngModel)]="persona.first_name" name="first_name" #first_name="ngModel"
+                                            [invalid]="first_name.invalid && (first_name.touched)" required />
+                                        @if (first_name.invalid && (first_name.touched )){
+                                        <p-message severity="error" size="small" variant="simple">Ingrese un
+                                            nombre</p-message>
+                                        }
+
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Ubigeo (Digite para
+                                                buscar) *</label>
+                                            <p-select [options]="listaubigeo" [(ngModel)]="selectedUbigeo"
+                                                [filter]="true" name="ubigeo" #ubigeo="ngModel"
+                                                optionLabel="nombreCompleto" filterBy="nombreCompleto"
+                                                [invalid]="ubigeo.invalid && (ubigeo.touched)"
+                                                placeholder="Digite para buscar" class="w-full" required
+                                                (ngModelChange)="asignarUbigeo()" (onFilter)="buscarUbigeo($event)" />
+                                            @if (ubigeo.invalid && (ubigeo.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Seleccione
+                                                Ubigeo</p-message>
+                                            }
+
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Domicilio *</label>
+                                            <input pInputText type="text" class="w-full p-2 border"
+                                                [(ngModel)]="persona.domicilio" name="domicilio" #domicilio="ngModel"
+                                                [invalid]="domicilio.invalid && (domicilio.touched)" required />
+                                            @if (domicilio.invalid && (domicilio.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Ingrese
+                                                Domicilio</p-message>
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label class="block text-sm font-semibold mb-1">Referencia</label>
+                                        <input pInputText type="text" class="w-full p-2 border"
+                                            [(ngModel)]="persona.referencia" name="referencia" />
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Teléfono</label>
+                                            <input pInputText type="text" class="w-full p-2 border"
+                                                [(ngModel)]="persona.telefono" name="telefono" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Celular *</label>
+                                            <input pInputText type="text" class="w-full p-2 border"
+                                                [(ngModel)]="persona.celular" name="celular" #celular="ngModel"
+                                                [invalid]="celular.invalid && (celular.touched)" required />
+                                            @if (celular.invalid && (celular.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Ingrese un
+                                                número de celular</p-message>
+                                            }
+
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1">Correo Electrónico *</label>
+                                            <input pInputText type="email" class="w-full p-2 border"
+                                                [(ngModel)]="persona.correo" name="correo" #correo="ngModel" required
+                                                [invalid]="correo.invalid && (correo.touched)" email />
+
+                                            @if (correo.invalid && (correo.touched )){
+                                            <p-message severity="error" size="small" variant="simple">Ingrese un correo
+                                                válido</p-message>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </p-card>
+                        </div>
+
+                        <div class="flex pt-6 justify-end">
+                            <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="irAlSiguientePaso(personaForm, activateCallback, 2)" />
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+
+                <p-step-panel [value]="2">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <app-documentos-step [listaTipoDocumento]="listaTipoDocumento"
+                            [selectedTipoDocumento]="selectedTipoDocumento"
+                            (selectedTipoDocumentoChange)="selectedTipoDocumento = $event" [asunto]="asunto"
+                            (asuntoChange)="asunto = $event" [numDoc]="numDoc" (numDocChange)="numDoc = $event"
+                            [archivo]="archivo" [anexos]="anexos" [activateCallback]="activateCallback" [pasoPrevio]="1"
+                            modo="documentos" (fileSelected)="onFileSelected($event)"
+                            (anexosSelected)="onAnexosSelected($event)"
+                            (siguiente)="irAlSiguientePasoDesdeHijo(activateCallback, 3)" />
+                    </ng-template>
+                </p-step-panel>
+                <p-step-panel [value]="3">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <app-documentos-step [listaTipoDocumento]="listaTipoDocumento"
+                            [selectedTipoDocumento]="selectedTipoDocumento"
+                            (selectedTipoDocumentoChange)="selectedTipoDocumento = $event" [asunto]="asunto"
+                            (asuntoChange)="asunto = $event" [numDoc]="numDoc" (numDocChange)="numDoc = $event"
+                            [archivo]="archivo" [anexos]="anexos" [activateCallback]="activateCallback" [pasoPrevio]="2"
+                            modo="final" (fileSelected)="onFileSelected($event)"
+                            (anexosSelected)="onAnexosSelected($event)" (finalizar)="finalizar()" [loading]="loading" />
+                    </ng-template>
+                </p-step-panel>
+            </p-step-panels>
+        </p-stepper>
+    </div>
+
+</p-card>

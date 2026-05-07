@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rechazar Expediente &mdash; Mesa de Partes Virtual</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .13);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #e74c3c;
+            color: #fff;
+            padding: 28px 32px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: .88;
+            margin: 0;
+        }
+
+        .body {
+            padding: 28px 32px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            color: #333;
+            transition: border-color .2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, .15);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity .2s;
+        }
+
+        .btn:hover {
+            opacity: .87;
+        }
+
+        .btn-rechazar {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .footer {
+            background: #f0f3f5;
+            text-align: center;
+            padding: 14px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>&#10060; Rechazar Expediente</h1>
+            <p>Por favor indique el motivo del rechazo</p>
+        </div>
+        <div class="body">
+            <form method="POST" action="{{ACTION_URL}}">
+                <label for="motivo">Motivo del rechazo <span style="color:#e74c3c">*</span></label>
+                <textarea id="motivo" name="motivo"
+                    placeholder="Describa el motivo por el cual se rechaza el expediente..." required></textarea>
+                <p class="hint">Este motivo sera incluido en el correo de notificacion al ciudadano.</p>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-rechazar">&#10060; Confirmar Rechazo</button>
+                </div>
+            </form>
+        </div>
+        <div class="footer">Mesa de Partes Virtual &copy; EPS GRAU S.A.</div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+    .container { background: #fff; max-width: 600px; margin: auto; border-radius: 8px;
+                 box-shadow: 0 2px 8px rgba(0,0,0,.1); overflow: hidden; }
+    .header { background: #1a5276; color: #fff; padding: 24px 32px; }
+    .header h1 { margin: 0; font-size: 20px; }
+    .header p  { margin: 4px 0 0; font-size: 13px; opacity: .85; }
+    .body { padding: 28px 32px; }
+    .row { margin-bottom: 12px; }
+    .row .lbl { font-weight: bold; color: #555; display: inline-block; width: 140px; }
+    .row .val { color: #222; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 24px 0; }
+    .btn-group { text-align: center; margin-top: 28px; }
+    .btn { display: inline-block; padding: 14px 36px; border-radius: 6px;
+           text-decoration: none; font-size: 16px; font-weight: bold; margin: 0 10px; }
+    .aceptar { background: #27ae60; color: #fff; }
+    .rechazar { background: #e74c3c; color: #fff; }
+    .note { font-size: 12px; color: #999; text-align: center; margin-top: 16px; }
+    .footer { background: #f0f3f5; text-align: center; padding: 14px;
+              font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🏛️ Mesa de Partes Virtual — EPS GRAU</h1>
+    <p>Se ha registrado un nuevo expediente</p>
+  </div>
+  <div class="body">
+    <p>Se ha recibido un nuevo expediente con los siguientes datos:</p>
+    <hr/>
+    <div class="row">
+      <span class="lbl">N° Expediente:</span>
+      <span class="val">{{NUM_EXPEDIENTE}}</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Remitente:</span>
+      <span class="val">{{NOMBRE_REMITENTE}}</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Correo:</span>
+      <span class="val">{{CORREO_REMITENTE}}</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Asunto:</span>
+      <span class="val">{{ASUNTO}}</span>
+    </div>
+    <hr/>
+    <p>Por favor revise la documentación y tome una decisión:</p>
+    <div class="btn-group">
+      <a href="{{URL_ACEPTAR}}" class="btn aceptar">✅ ACEPTAR</a>
+      <a href="{{URL_RECHAZAR}}" class="btn rechazar">❌ RECHAZAR</a>
+    </div>
+    <p class="note">Al hacer clic se notificará automáticamente al ciudadano.</p>
+  </div>
+  <div class="footer">Mesa de Partes Virtual &copy; EPS GRAU S.A.</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+@if (modo === 'documentos') {
+<!-- PASO 2: DOCUMENTOS -->
+<form #documentosForm="ngForm">
+  <div
+    class="dark:border-surface-700 rounded bg-gray-100 dark:bg-surface-950 flex flex-col md:flex-row flex-wrap gap-6 p-6">
+    <p-card class="w-full">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Tipo Documento *</label>
+          <p-select [options]="listaTipoDocumento" [ngModel]="selectedTipoDocumento"
+            (ngModelChange)="selectedTipoDocumentoChange.emit($event)" [filter]="true" name="tipoDocumento"
+            #tipoDocumentoCtrl="ngModel" optionLabel="cdocDesdoc" filterBy="cdocDesdoc"
+            [invalid]="tipoDocumentoCtrl.invalid && tipoDocumentoCtrl.touched" placeholder="Seleccione tipo documento"
+            class="w-full" required />
+          @if (tipoDocumentoCtrl.invalid && tipoDocumentoCtrl.touched) {
+          <p-message severity="error" size="small" variant="simple">Seleccione tipo documento</p-message>
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Asunto *</label>
+          <input pInputText type="text" class="w-full p-2 border" [ngModel]="asunto"
+            (ngModelChange)="asuntoChange.emit($event)" name="asunto" #asuntoCtrl="ngModel"
+            [invalid]="asuntoCtrl.invalid && asuntoCtrl.touched" required />
+          @if (asuntoCtrl.invalid && asuntoCtrl.touched) {
+          <p-message severity="error" size="small" variant="simple">Ingrese el asunto</p-message>
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Número de Documento *</label>
+          <input pInputText type="text" class="w-full p-2 border" [ngModel]="numDoc"
+            (ngModelChange)="numDocChange.emit($event)" name="numDoc" #numDocCtrl="ngModel"
+            [invalid]="numDocCtrl.invalid && numDocCtrl.touched" required />
+          @if (numDocCtrl.invalid && numDocCtrl.touched) {
+          <p-message severity="error" size="small" variant="simple">Ingrese el número de documento</p-message>
+          }
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+          <i class="pi pi-file-pdf text-red-500 mr-1"></i> Archivo PDF *
+        </label>
+        <label
+          class="flex flex-col items-center justify-center w-full p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-emerald-500 dark:hover:border-emerald-400 transition-colors bg-gray-50 dark:bg-gray-800">
+          <div class="flex flex-col items-center text-center">
+            <i class="pi pi-upload text-3xl text-gray-400 mb-2"></i>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Haz clic para seleccionar un archivo PDF</span>
+            <span class="text-xs text-gray-400 mt-1">Máximo 30MB</span>
+          </div>
+          <input type="file" accept=".pdf" class="hidden" (change)="fileSelected.emit($event)" />
+        </label>
+        @if (archivo) {
+        <div class="mt-2 flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-900/20 p-2 rounded">
+          <i class="pi pi-check-circle"></i>
+          <span class="text-sm font-medium">Archivo seleccionado:</span>
+          <span class="text-sm truncate">{{ archivo.name }}</span>
+        </div>
+        } @else {
+        <p class="text-xs mt-2 text-red-500 flex items-center gap-1">
+          <i class="pi pi-exclamation-triangle"></i> No se ha seleccionado archivo PDF
+        </p>
+        }
+      </div>
+
+      <div class="mt-6">
+        <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+          <i class="pi pi-paperclip text-blue-500 mr-1"></i> Anexos (opcional)
+        </label>
+        <label
+          class="flex flex-col items-center justify-center w-full p-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-emerald-500 dark:hover:border-emerald-400 transition-colors bg-gray-50 dark:bg-gray-800">
+          <div class="flex flex-col items-center text-center">
+            <i class="pi pi-folder-open text-3xl text-gray-400 mb-2"></i>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Haz clic para seleccionar archivos</span>
+            <span class="text-xs text-gray-400 mt-1">Cualquier formato, máximo 450MB total</span>
+          </div>
+          <input type="file" multiple class="hidden" (change)="anexosSelected.emit($event)" />
+        </label>
+        @if (anexos.length > 0) {
+        <div class="mt-2 bg-blue-50 dark:bg-blue-900/20 p-3 rounded">
+          <div class="flex items-center gap-2 text-blue-600 mb-2">
+            <i class="pi pi-check-circle"></i>
+            <span class="text-sm font-medium">Anexos seleccionados ({{ anexos.length }}):</span>
+          </div>
+          <ul class="space-y-1">
+            @for (anexo of anexos; track anexo.name) {
+            <li class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+              <i class="pi pi-file text-gray-400"></i>
+              <span class="truncate">{{ anexo.name }}</span>
+            </li>
+            }
+          </ul>
+        </div>
+        }
+      </div>
+    </p-card>
+  </div>
+</form>
+
+<div class="flex pt-6 justify-between">
+  <p-button label="Atrás" severity="secondary" icon="pi pi-arrow-left" (onClick)="activateCallback(pasoPrevio)" />
+  <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="siguiente.emit()" />
+</div>
+}
+
+@if (modo === 'final') {
+<!-- PASO 3: FINAL -->
+@if (loading) {
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 rounded bg-gray-100 dark:bg-surface-950">
+  <div class="text-center">
+    <p-progressSpinner />
+    <p class="mt-4 text-white font-semibold">Guardando expediente...</p>
+  </div>
+</div>
+}
+<div
+  class="dark:border-surface-700 rounded bg-gray-100 dark:bg-surface-950 flex flex-col md:flex-row flex-wrap gap-6 p-6">
+  <p class="text-lg font-semibold">Proceso completado. Revise los datos ingresados y haga clic en Finalizar para enviar.
+  </p>
+</div>
+<div class="flex pt-6 justify-between">
+  <p-button label="Atrás" severity="secondary" icon="pi pi-arrow-left" (onClick)="activateCallback(pasoPrevio)" />
+  <p-button label="Finalizar" icon="pi pi-check" iconPos="right" [loading]="loading" [disabled]="loading"
+    (onClick)="finalizar.emit()" />
+</div>
+}

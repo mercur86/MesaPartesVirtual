@@ -1,0 +1,17 @@
+~/.acme.sh/acme.sh --issue -d api-sgd.epsgrau.pe --standalone    
+ 
+
+1.- ############
+###ESTE COMANDO GENERA EL keystore.p12 EN LA CARPETA DESDE DON EJECUTAS EL COMANDO 
+openssl pkcs12 -export   -in /root/.acme.sh/api-sgd.epsgrau.pe_ecc/fullchain.cer   -inkey /root/.acme.sh/api-sgd.epsgrau.pe_ecc/api-sgd.epsgrau.pe.key   -out keystore.p12   -name miappssl
+
+2.-#######
+keystore.p12   ponerlo  dentro del proyecto java src\main\resources\keystore.p12
+
+####VERIFICAR DIAS FALTANTES 
+openssl x509 -in /root/.acme.sh/api-sgd.epsgrau.pe_ecc/fullchain.cer -noout -dates
+
+28 21 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" >> /var/log/acme.sh.log 2>&1
+
+
+

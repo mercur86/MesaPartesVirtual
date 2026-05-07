@@ -1,0 +1,161 @@
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
+  <!-- Título -->
+  <div class="text-center mb-8">
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Mesa de Partes Virtual</h1>
+    <p class="text-gray-500">Presenta tus documentos de forma segura y rápida</p>
+  </div>
+
+  <!-- Bloque informativo -->
+  <div class="max-w-5xl mx-auto mb-8">
+    <div class="bg-white border-l-4 border-emerald-500 rounded-r-lg shadow-md p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <i class="pi pi-info-circle text-emerald-600 text-xl"></i>
+        <p class="font-bold text-lg text-gray-700">Información Importante:</p>
+      </div>
+      <ul class="space-y-3 text-gray-600">
+        <li class="flex items-start gap-2">
+          <i class="pi pi-check text-emerald-500 mt-1"></i>
+          <span>Puede hacer uso de nuestra Mesa de Partes Virtual los <strong class="text-gray-800">siete días de la semana</strong>, las <strong class="text-gray-800">24 horas del día</strong>.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="pi pi-check text-emerald-500 mt-1"></i>
+          <span>Los documentos presentados entre las <strong class="text-gray-800">00:00</strong> y las <strong class="text-gray-800">23:59 horas</strong> de un día hábil serán considerados como presentados ese mismo día hábil.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="pi pi-check text-emerald-500 mt-1"></i>
+          <span>Los documentos presentados los <strong class="text-gray-800">sábados, domingos, feriados</strong> o cualquier otro día no hábil serán considerados como presentados el siguiente día hábil.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Términos -->
+  <div class="max-w-2xl mx-auto mt-10">
+    <div class="bg-white border border-gray-200 rounded-xl p-5 flex items-center gap-4 shadow-sm">
+      <input 
+        type="checkbox" 
+        [(ngModel)]="aceptarTerminos"
+        class="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 cursor-pointer"
+      />
+      <label class="text-gray-600 cursor-pointer">
+        He leído y acepto los 
+        <a (click)="mostrarTerminos = true; $event.preventDefault()" 
+           class="text-emerald-600 hover:text-emerald-700 font-medium underline cursor-pointer">
+          términos y condiciones
+        </a>
+        <span class="text-red-500">*</span>
+      </label>
+    </div>
+    
+    <!-- Botones de acción -->
+    <div class="flex justify-center gap-4 mt-6">
+      <button 
+        pButton 
+        label="Continuar como Persona Natural" 
+        icon="pi pi-user" 
+        class="p-button-rounded"
+        [disabled]="!aceptarTerminos"
+        routerLink="/mesapartes/personanatural"
+      ></button>
+      <button 
+        pButton 
+        label="Continuar como Persona Jurídica" 
+        icon="pi pi-building" 
+        class="p-button-rounded p-button-outlined"
+        [disabled]="!aceptarTerminos"
+        routerLink="/mesapartes/personajuridica"
+      ></button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Términos y Condiciones -->
+<p-dialog 
+  header="Términos y Condiciones" 
+  [(visible)]="mostrarTerminos" 
+  [modal]="true" 
+  [style]="{width: '70vw', maxWidth: '800px'}"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="p-dialog-header"
+>
+  <div class="p-6 text-gray-700 space-y-4">
+    <h3 class="text-xl font-bold text-gray-800">TÉRMINOS Y CONDICIONES DE USO</h3>
+    <p class="text-sm text-gray-500">Última actualización: Abril 2026</p>
+    
+    <div class="space-y-4 text-sm leading-relaxed">
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">1. ACEPTACIÓN DE TÉRMINOS</h4>
+        <p>Al acceder y utilizar la Mesa de Partes Virtual, usted acepta cumplir con los presentes términos y condiciones. Si no está de acuerdo con alguno de estos términos, no deberá utilizar este servicio.</p>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">2. DESCRIPCIÓN DEL SERVICIO</h4>
+        <p>La Mesa de Partes Virtual es una plataforma que permite la presentación de documentos de manera electrónica a la institución, los siete días de la semana, las 24 horas del día.</p>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">3. HORARIOS DE PRESENTACIÓN</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Los documentos presentados entre las 00:00 y las 23:59 horas de un día hábil serán considerados como presentados ese mismo día hábil.</li>
+          <li>Los documentos presentados en días no hábiles (sábados, domingos, feriados) serán considerados como presentados el siguiente día hábil.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">4. REQUISITOS DEL USUARIO</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Contar con un documento de identidad válido (DNI, RUC, Carné de Extranjería o Pasaporte).</li>
+          <li>Proporcionar información veraz y actualizada.</li>
+          <li>Tener correo electrónico válido para notificaciones.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">5. FORMATOS Y TAMAÑOS DE ARCHIVOS</h4>
+        <p>Los documentos deben ser presentadas en formato PDF. El tamaño máximo permitido es de 25 MB por archivo.</p>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">6. RESPONSABILIDADES DEL USUARIO</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Garantizar la autenticidad de los documentos presentados.</li>
+          <li>Mantener confidencial su información de acceso.</li>
+          <li>Revisar que los documentos estén completos y legibles.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">7. POLÍTICA DE PRIVACIDAD</h4>
+        <p>Los datos personales proporcionados serán tratados conforme a la legislación vigente en materia de protección de datos personales.</p>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">8. LIMITACIÓN DE RESPONSABILIDAD</h4>
+        <p>La institución no se responsabiliza por problemas técnicos que puedan surgir durante la presentación de documentos, incluyendo pero no limitándose a fallos de conexión o errores en la carga de archivos.</p>
+      </section>
+      
+      <section>
+        <h4 class="font-semibold text-gray-800 mb-2">9. MODIFICACIONES</h4>
+        <p>La institución se reserva el derecho de modificar los presentes términos y condiciones en cualquier momento. Las modificaciones entrarán en vigor desde su publicación en la plataforma.</p>
+      </section>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button 
+        pButton 
+        label="Cerrar" 
+        class="p-button-text" 
+        (click)="mostrarTerminos = false"
+      ></button>
+      <button 
+        pButton 
+        label="Aceptar y Continuar" 
+        icon="pi pi-check"
+        (click)="aceptarTerminos = true; mostrarTerminos = false"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>
