@@ -43,7 +43,7 @@ public class MailConfig {
 
     private JavaMailSender buildSender(String username, String password) {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        sender.setHost("smtp.office365.com");
+        sender.setHost("smtp.gmail.com");
         sender.setPort(587);
         sender.setUsername(username);
         sender.setPassword(password);
@@ -54,7 +54,7 @@ public class MailConfig {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.starttls.required", "true");
-        props.put("mail.smtp.ssl.trust", "smtp.office365.com");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.smtp.connectiontimeout", "10000");
         props.put("mail.smtp.timeout", "10000");

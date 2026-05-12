@@ -1,4 +1,17 @@
 <p-toast />
+<p-dialog
+  header="Registro Exitoso"
+  [(visible)]="showSuccessDialog"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '450px' }">
+  <div class="flex flex-col gap-4">
+    <p class="text-base">Documento Registrado exitosamente en unos minutos recibira un correo de confirmacion con su numero de expediente</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="OK" icon="pi pi-check" (click)="cerrarDialogoYRedirigir()" autofocus />
+  </ng-template>
+</p-dialog>
 <p-card header="Persona Natural" class="w-full md:max-w-5xl mx-auto mt-6 p-4">
     <ng-template pTemplate="header">
         <div class="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 rounded-t-lg">

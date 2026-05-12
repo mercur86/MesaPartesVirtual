@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { Usuario } from '@/mesapartesvirtual/models/usuario';
 import { Persona } from '@/mesapartesvirtual/models/Persona';
 import { BaseMesaPartesComponent } from '../base-mesapartes.component';
@@ -16,7 +17,7 @@ import { DocumentosStepComponent } from '../documentos-step/documentos-step.comp
 @Component({
   selector: 'app-personanatural',
   imports: [StepperModule, ButtonModule, CardModule, SelectModule, FormsModule,
-    InputTextModule, MessageModule, ToastModule, DocumentosStepComponent],
+    InputTextModule, MessageModule, ToastModule, DialogModule, DocumentosStepComponent],
   providers: [MessageService],
   templateUrl: './personanatural.html',
   styleUrl: './personanatural.scss'
@@ -25,6 +26,7 @@ export class Personanatural extends BaseMesaPartesComponent {
   user = new Usuario();
   persona = new Persona();
   loading = false;
+  showSuccessDialog = false;
 
   initDocumentosIdentidad() {
     this.documentosIdentidad = [
@@ -106,11 +108,10 @@ export class Personanatural extends BaseMesaPartesComponent {
     this.apiService.postExpediente(mpv, this.archivo, this.anexos).subscribe({
       next: () => {
         this.loading = false;
-        this.navegarAlInicio();
+        this.showSuccessDialog = true;
       },
       error: (err) => {
         this.loading = false;
-        console.error('Error al enviar expediente:', err);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -120,4 +121,8 @@ export class Personanatural extends BaseMesaPartesComponent {
       }
     });
   }
-}
+
+  cerrarDialogoYRedirigir() {
+    this.showSuccessDialog = false;
+    this.navegarAlInicio();
+  }}

@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { Usuario } from '@/mesapartesvirtual/models/usuario';
 import { BaseMesaPartesComponent } from '../base-mesapartes.component';
 import { Empresa } from '@/mesapartesvirtual/models/Empresa';
@@ -16,7 +17,7 @@ import { DocumentosStepComponent } from '../documentos-step/documentos-step.comp
 @Component({
   selector: 'app-personanajuridica',
   imports: [StepperModule, ButtonModule, CardModule, SelectModule, FormsModule,
-    InputTextModule, MessageModule, ToastModule, DocumentosStepComponent],
+    InputTextModule, MessageModule, ToastModule, DialogModule, DocumentosStepComponent],
   providers: [MessageService],
   templateUrl: './personanajuridica.html',
   styleUrl: './personanajuridica.scss'
@@ -25,6 +26,7 @@ export class Personanajuridica extends BaseMesaPartesComponent {
   user = new Usuario();
   empresa = new Empresa();
   loading = false;
+  showSuccessDialog = false;
 
   initDocumentosIdentidad() {
     this.documentosIdentidad = [
@@ -105,11 +107,11 @@ export class Personanajuridica extends BaseMesaPartesComponent {
     this.apiService.postExpediente(mpv, this.archivo, this.anexos).subscribe({
       next: () => {
         this.loading = false;
-        this.navegarAlInicio();
+        this.showSuccessDialog = true;
       },
       error: (err) => {
         this.loading = false;
-        console.error('Error al enviar expediente:', err);
+        console.error('Error al enviar expediente:');
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -119,4 +121,8 @@ export class Personanajuridica extends BaseMesaPartesComponent {
       }
     });
   }
-}
+
+  cerrarDialogoYRedirigir() {
+    this.showSuccessDialog = false;
+    this.navegarAlInicio();
+  }}
