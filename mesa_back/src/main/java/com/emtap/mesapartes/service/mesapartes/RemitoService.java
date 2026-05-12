@@ -43,7 +43,7 @@ public class RemitoService {
                         : null);
 
         Integer nuCorDoc = remitoRepository.getNuCorEmi(expedienteBean.getNuAnnExp());
-        remito.setCodigoLocalEmision(remitenteBean.getCoLocEmi()); // zonal
+        remito.setCodigoLocalEmision("001"); // local
         remito.setCodigoDependenciaEmision("00085"); //dependencia mesa partes
         remito.setCodigoDependenciaOrigen("00085");
         remito.setCodigoDepartamento("19");

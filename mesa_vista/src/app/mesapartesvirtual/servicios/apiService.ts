@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Api {
+  //private apiUrl = 'http://10.10.10.11:8081';
   private apiUrl = 'http://localhost:8081';
 
   private http = inject(HttpClient);
@@ -45,7 +46,7 @@ export class Api {
       formData.append('anexos', anexos[i]);
     }
 
-    const url = `${this.apiUrl}/api/public/expediente1`;
+    const url = `${this.apiUrl}/api/public/expediente`;
     return this.http.post(url, formData);
   }
 }

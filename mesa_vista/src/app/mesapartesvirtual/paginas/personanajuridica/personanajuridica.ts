@@ -118,7 +118,7 @@ export class Personanajuridica extends BaseMesaPartesComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Error al enviar la solicitud: ' + (err.error?.message || err.message),
+          detail: 'Error al enviar la solicitud: ',
           life: 5000
         });
       }
