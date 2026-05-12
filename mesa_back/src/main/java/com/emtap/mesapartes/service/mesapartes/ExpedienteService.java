@@ -16,12 +16,14 @@ import com.emtap.mesapartes.repository.mesapartes.AnexosDocRepository;
 import com.emtap.mesapartes.service.reniec.ApiReniecService;
 import com.emtap.mesapartes.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -36,7 +38,8 @@ public class ExpedienteService {
     private final ProveedorService proveedorService;
     private final EmailService emailService;
     private final AnexosDocRepository anexosDocRepository;
-
+    @Value("${remito.usuario-crea}")
+    private String usuarioCrea;
     public ExpedienteService(ExpedienteRepository expedienteRepository,
             RemitoService remitoService, ArchivoDocService archivoDocService,
             PersonaService personaService,
@@ -201,6 +204,13 @@ public class ExpedienteService {
                         AnexosDoc anexoDoc = new AnexosDoc();
                         anexoDoc.setId(anexoId);
                         anexoDoc.setBlDoc(archivoAnexo.getBytes());
+                        anexoDoc.setUserCreacion(usuarioCrea);
+                        anexoDoc.setUserModificacion(usuarioCrea);
+                        anexoDoc.setDetalleNombre(archivoAnexo.getOriginalFilename());
+                        anexoDoc.setDetalleRuta(archivoAnexo.getOriginalFilename());
+                        anexoDoc.setFechaUsuarioCreacion(LocalDateTime.now());
+                        anexoDoc.setFechaUsuarioModificacion(LocalDateTime.now());
+                        anexoDoc.setPublico("1");
                         anexosDocRepository.save(anexoDoc);
                         log.info("Anexo {} guardado correctamente", contadorAnexo);
                         contadorAnexo++;
