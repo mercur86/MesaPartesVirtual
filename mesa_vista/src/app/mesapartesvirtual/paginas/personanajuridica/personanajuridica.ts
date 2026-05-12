@@ -89,14 +89,9 @@ export class Personanajuridica extends BaseMesaPartesComponent {
         coTipoExp: "20"
       },
       remitente: {
-        coDepEmi: '00085',
-        coDep: '00085',
-        tiEmi: '02',
         nuDni: '',
-        coEmpEmi: '00000',
         nuRuc: this.empresa.numero_documento,
         coOtros: '',
-        coEmpRes: '00000',
         telefono: this.empresa.celular,
         idDepartamento: ubigeoParts.idDepartamento,
         idProvincia: ubigeoParts.idProvincia,

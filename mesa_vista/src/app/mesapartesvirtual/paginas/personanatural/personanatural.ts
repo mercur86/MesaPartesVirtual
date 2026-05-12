@@ -91,14 +91,9 @@ export class Personanatural extends BaseMesaPartesComponent {
         coTipoExp: "20"
       },
       remitente: {
-        coDepEmi: '00085',
-        coDep: '00085',
-        tiEmi: '02',
         nuDni: this.persona.document_number,
-        coEmpEmi: '00000',
         nuRuc: '',
         coOtros: '',
-        coEmpRes: '00000',
         telefono: this.persona.celular,
         idDepartamento: ubigeoParts.idDepartamento,
         idProvincia: ubigeoParts.idProvincia,

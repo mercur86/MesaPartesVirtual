@@ -8,6 +8,7 @@ import com.emtap.mesapartes.entity.mesapartes.Remito;
 import com.emtap.mesapartes.entity.mesapartes.RemitoId;
 import com.emtap.mesapartes.repository.mesapartes.RemitoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,27 @@ import java.time.LocalDateTime;
 public class RemitoService {
 
     private final RemitoRepository remitoRepository;
+
+    @Value("${remito.codigo-local-emision}")
+    private String codigoLocalEmision;
+
+    @Value("${remito.codigo-dependencia-emision}")
+    private String codigoDependenciaEmision;
+
+    @Value("${remito.codigo-dependencia-origen}")
+    private String codigoDependenciaOrigen;
+
+    @Value("${remito.codigo-departamento}")
+    private String codigoDepartamento;
+
+    @Value("${remito.codigo-empleado-emisor}")
+    private String codigoEmpleadoEmisor;
+
+    @Value("${remito.usuario-crea}")
+    private String usuarioCrea;
+
+    @Value("${remito.codigo-empleado-responsable}")
+    private String codigoEmpleadoResponsable;
 
     public RemitoService(RemitoRepository remitoRepository) {
         this.remitoRepository = remitoRepository;
@@ -43,28 +65,28 @@ public class RemitoService {
                         : null);
 
         Integer nuCorDoc = remitoRepository.getNuCorEmi(expedienteBean.getNuAnnExp());
-        remito.setCodigoLocalEmision("001"); // local
-        remito.setCodigoDependenciaEmision("00085"); //dependencia mesa partes
-        remito.setCodigoDependenciaOrigen("00085");
-        remito.setCodigoDepartamento("19");
-        remito.setTipoEmision("03"); // fijo
+        remito.setCodigoLocalEmision(codigoLocalEmision);
+        remito.setCodigoDependenciaEmision(codigoDependenciaEmision);
+        remito.setCodigoDependenciaOrigen(codigoDependenciaOrigen);
+        remito.setCodigoDepartamento(codigoDepartamento);
+        remito.setTipoEmision("03");
         remito.setDniEmisor(remitenteBean.getNuDni());
         remito.setRemiNumeroDniEmisor(remitenteBean.getNuDni());
-        remito.setCodigoEmpleadoEmisor("00538"); // empleado gerencia
+        remito.setCodigoEmpleadoEmisor(codigoEmpleadoEmisor);
         remito.setRucEmisor(remitenteBean.getNuRuc());
         remito.setFechaEmision(expedienteBean.getFeExp());
-        remito.setCodigoGrupo("3");
+        remito.setCodigoGrupo("3");//
         remito.setAsunto(documentoBean.getDeAsu());
-        remito.setEstadoDocumentoEmision("5");
+        remito.setEstadoDocumentoEmision("5"); // en proyecto
         remito.setDiasAtencion((short) 0);
         remito.setEliminado("0");
-        remito.setUsuarioCrea("ADMIN");
+        remito.setUsuarioCrea(usuarioCrea);
         remito.setFechaCrea(LocalDateTime.now());
-        remito.setUsuarioModifica("ADMIN");
+        remito.setUsuarioModifica(usuarioCrea);
         remito.setFechaModifica(LocalDateTime.now());
-        remito.setTipoDocumentoAdm(documentoBean.getCoTipDocAdm()); // tipo documento
+        remito.setTipoDocumentoAdm(documentoBean.getCoTipDocAdm());
         remito.setActualizado("0");
-        remito.setCodigoEmpleadoResponsable("00310");
+        remito.setCodigoEmpleadoResponsable(codigoEmpleadoResponsable);
         remito.setCantidadDestinatarios((short) 1);
         remito.setCorrelativoDocumento(nuCorDoc);
         remito.setDocumentoSiguiente(documentoBean.getNuDoc());
@@ -77,7 +99,7 @@ public class RemitoService {
         remito.setRemiTipoEmision("03");
         remito.setCorreoExpediente(remitenteBean.getDeCorreo());
         remito.setDetalleExpediente((short) 1);
-        remito.setNumeroFolios(0.0);
+        remito.setNumeroFolios((double) 0);
         remito.setCodigoOrigenGenerado("08");
         remito.setDireccionRemitente("S/N");
         remito.setIndicadorOficio("0");
