@@ -40,6 +40,7 @@ public class ExpedienteService {
     private final AnexosDocRepository anexosDocRepository;
     @Value("${remito.usuario-crea}")
     private String usuarioCrea;
+
     public ExpedienteService(ExpedienteRepository expedienteRepository,
             RemitoService remitoService, ArchivoDocService archivoDocService,
             PersonaService personaService,
@@ -179,10 +180,9 @@ public class ExpedienteService {
             log.warn("Remitente sin DNI ni RUC, se omite consulta externa");
         }
 
-        // 2️⃣ Insertar expediente
+        // 2️ Insertar expediente
         Expediente expediente = insExpedienteBean(mpv);
-
-        // 3️⃣ Insertar remito (se pasa persona; si vino por RUC, persona queda null)
+        // 3️ Insertar remito (se pasa persona; si vino por RUC, persona queda null)
         Remito remito = remitoService.insDocumentoExtBean(
                 mpv.getDocumento(),
                 mapToBean(expediente),

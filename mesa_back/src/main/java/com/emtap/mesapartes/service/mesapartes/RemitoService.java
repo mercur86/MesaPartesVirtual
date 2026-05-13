@@ -27,9 +27,6 @@ public class RemitoService {
     @Value("${remito.codigo-dependencia-origen}")
     private String codigoDependenciaOrigen;
 
-    @Value("${remito.codigo-departamento}")
-    private String codigoDepartamento;
-
     @Value("${remito.codigo-empleado-emisor}")
     private String codigoEmpleadoEmisor;
 
@@ -68,7 +65,9 @@ public class RemitoService {
         remito.setCodigoLocalEmision(codigoLocalEmision);
         remito.setCodigoDependenciaEmision(codigoDependenciaEmision);
         remito.setCodigoDependenciaOrigen(codigoDependenciaOrigen);
-        remito.setCodigoDepartamento(codigoDepartamento);
+        remito.setCodigoDepartamento(remitenteBean.getIdDepartamento());
+        remito.setCodigoProvincia(remitenteBean.getIdProvincia());
+        remito.setCodigoDistrito(remitenteBean.getIdDistrito());
         remito.setTipoEmision("03");
         remito.setDniEmisor(remitenteBean.getNuDni());
         remito.setRemiNumeroDniEmisor(remitenteBean.getNuDni());
@@ -101,7 +100,7 @@ public class RemitoService {
         remito.setDetalleExpediente((short) 1);
         remito.setNumeroFolios((double) 0);
         remito.setCodigoOrigenGenerado("08");
-        remito.setDireccionRemitente("S/N");
+        remito.setDireccionRemitente(remitenteBean.getDeDireccion());
         remito.setIndicadorOficio("0");
         if (persona != null) {
             remito.setOrigenEmision(
