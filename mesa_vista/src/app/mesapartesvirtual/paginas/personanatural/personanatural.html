@@ -53,7 +53,7 @@
                                         <input pInputText id="nroDocumento" name="nroDocumento" class="w-full mt-1"
                                             [(ngModel)]="persona.document_number" #numerodoc="ngModel"
                                             [invalid]="numerodoc.invalid && (numerodoc.touched || reniecForm.submitted)"
-                                            minlength="8" maxlength="8" required />
+                                            [minlength]="documentoLength" [maxlength]="documentoLength" required />
                                         @if (numerodoc.invalid && (numerodoc.touched || reniecForm.submitted)){
                                         <p-message severity="error" size="small" variant="simple">Ingrese un número de
                                             documento</p-message>

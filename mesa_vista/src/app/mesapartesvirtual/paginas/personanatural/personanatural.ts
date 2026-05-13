@@ -28,11 +28,14 @@ export class Personanatural extends BaseMesaPartesComponent {
   loading = false;
   showSuccessDialog = false;
 
+  get documentoLength(): number {
+    return this.selectedDocumentoIdentidad?.code === 'RM' ? 9 : 8;
+  }
+
   initDocumentosIdentidad() {
     this.documentosIdentidad = [
       { name: 'DNI', code: 'NY' },
       { name: 'CARNET DE EXTRANGERÍA', code: 'RM' },
-      { name: 'PASAPORTE', code: 'LDN' }
     ];
   }
 
@@ -125,4 +128,5 @@ export class Personanatural extends BaseMesaPartesComponent {
   cerrarDialogoYRedirigir() {
     this.showSuccessDialog = false;
     this.navegarAlInicio();
-  }}
+  }
+}

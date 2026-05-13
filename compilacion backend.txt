@@ -1,1 +1,6 @@
 mvn clean install -DskipTests 
+
+correr app
+
+/opt/java17/bin/java -jar /ruta/completa/a/tu/aplicacion.jar
+
