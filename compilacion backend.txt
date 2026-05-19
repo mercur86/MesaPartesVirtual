@@ -2,5 +2,5 @@ mvn clean install -DskipTests
 
 correr app
 
-/opt/java17/bin/java -jar /ruta/completa/a/tu/aplicacion.jar
+/opt/java17/bin/java -jar "/home/sgd-admin/mesapartes-0.0.1-SNAPSHOT.jar" &
 
