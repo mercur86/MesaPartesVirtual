@@ -3,4 +3,6 @@ mvn clean install -DskipTests
 correr app
 
 /opt/java17/bin/java -jar "/home/sgd-admin/mesapartes-0.0.1-SNAPSHOT.jar" &
+/opt/java17/bin/java -jar "/home/sgd-admin/mesapartes-0.0.1-SNAPSHOT.jar" > /home/sgd-admin/logs/mesapartes.log 2>&1 &
+
 

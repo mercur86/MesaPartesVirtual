@@ -22,6 +22,9 @@ public class RemitenteDocExtRecepBean {
     private String deDireccion;
     private String nuDniRes;
     private String deNuDniRes;
+    private String apePaterno;
+    private String apeMaterno;
+    private String nombre;
     
     @NotBlank(message = "El correo es obligatorio")
     private String deCorreo;

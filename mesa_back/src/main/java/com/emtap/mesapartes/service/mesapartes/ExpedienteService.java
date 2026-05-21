@@ -161,6 +161,13 @@ public class ExpedienteService {
             // Registrar persona solo si se obtuvo algo
             if (persona != null) {
                 personaService.registrarSiNoExiste(persona);
+            }else{
+                persona= new Persona();
+                persona.setFirst_name(mpv.getRemitente().getNombre());
+                persona.setFirst_last_name(mpv.getRemitente().getApePaterno());
+                persona.setSecond_last_name(mpv.getRemitente().getApeMaterno());
+                persona.setDocument_number(nuDni);
+                personaService.registrarSiNoExiste(persona);
             }
 
         } else if (nuRuc != null && !nuRuc.isBlank()) {

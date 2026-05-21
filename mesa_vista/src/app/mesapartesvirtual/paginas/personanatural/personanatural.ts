@@ -104,7 +104,11 @@ export class Personanatural extends BaseMesaPartesComponent {
         idProvincia: ubigeoParts.idProvincia,
         idDistrito: ubigeoParts.idDistrito,
         deCorreo: this.persona.correo,
-        deDireccion: this.persona.domicilio
+        deDireccion: this.persona.domicilio,
+        apePaterno:this.persona.first_last_name,
+        apeMaterno:this.persona.second_last_name,
+        nombre:this.persona.first_name
+
       }
     };
 

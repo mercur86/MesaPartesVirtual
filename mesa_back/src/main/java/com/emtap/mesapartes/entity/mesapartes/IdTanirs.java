@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class IdTanirs {
 
     @Id
-    @Column(name = "nulem", length = 8, nullable = false)
+    @Column(name = "nulem", length = 9, nullable = false)
     private String nulem;
 
     @Column(name = "ubdep", length = 2)
