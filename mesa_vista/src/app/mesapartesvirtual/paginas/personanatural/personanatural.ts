@@ -29,7 +29,7 @@ export class Personanatural extends BaseMesaPartesComponent {
   showSuccessDialog = false;
 
   get documentoLength(): number {
-    return this.selectedDocumentoIdentidad?.code === 'RM' ? 9 : 8;
+    return this.selectedDocumentoIdentidad?.code === 'RM' ? 8 : 8;
   }
 
   initDocumentosIdentidad() {
