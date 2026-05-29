@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesa Partes Virtual - Documentación Técnica</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --bg3: #334155;
+    --fg: #e2e8f0;
+    --fg2: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --orange: #fb923c;
+    --border: #334155;
+    --radius: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  nav {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+    background: var(--bg2); border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 24px 16px; z-index: 100;
+  }
+  nav h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin: 20px 0 8px; }
+  nav h2:first-child { margin-top: 0; }
+  nav a {
+    display: block; padding: 4px 8px; color: var(--fg2); text-decoration: none;
+    font-size: 13px; border-radius: 4px; transition: all .15s;
+  }
+  nav a:hover, nav a.active { color: var(--accent); background: rgba(56,189,248,.1); }
+  nav .sub { padding-left: 16px; font-size: 12px; }
+  main { margin-left: 280px; padding: 40px 48px 80px; }
+  h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  h1 + p { color: var(--fg2); font-size: 16px; margin-bottom: 40px; }
+  h2 {
+    font-size: 24px; font-weight: 600; margin: 48px 0 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--border); color: var(--accent);
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; color: var(--fg); }
+  h4 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; color: var(--fg2); }
+  p { margin-bottom: 12px; color: var(--fg2); }
+  ul, ol { margin: 8px 0 16px 20px; color: var(--fg2); }
+  li { margin-bottom: 4px; }
+  code {
+    background: var(--bg3); padding: 2px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px;
+  }
+  pre {
+    background: var(--bg3); padding: 16px; border-radius: var(--radius);
+    overflow-x: auto; margin: 12px 0 20px; border: 1px solid var(--border);
+  }
+  pre code { background: none; padding: 0; font-size: 13px; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 12px 0 20px;
+    font-size: 14px;
+  }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--fg); font-weight: 600; }
+  tr:hover td { background: rgba(56,189,248,.04); }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .3px;
+  }
+  .badge.get { background: rgba(59,130,246,.2); color: #60a5fa; }
+  .badge.post { background: rgba(74,222,128,.2); color: #4ade80; }
+  .badge.put { background: rgba(251,191,36,.2); color: #fbbf24; }
+  .badge.delete { background: rgba(248,113,113,.2); color: #f87171; }
+  .badge.public { background: rgba(129,140,248,.2); color: #a5b4fc; }
+  .badge.auth { background: rgba(56,189,248,.2); color: #38bdf8; }
+  .badge.admin { background: rgba(251,146,60,.2); color: #fb923c; }
+  .card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin: 12px 0 20px;
+  }
+  .card h4 { margin-top: 0; }
+  .pkg-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px; margin: 12px 0 20px;
+  }
+  .pkg-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px;
+  }
+  .pkg-card h4 { margin: 0 0 4px; font-size: 14px; }
+  .pkg-card p { font-size: 13px; margin: 0; }
+  .flow-diagram {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; text-align: center; margin: 16px 0 24px; font-size: 14px;
+  }
+  .flow-step {
+    display: inline-block; background: var(--bg3); padding: 8px 16px;
+    border-radius: 6px; margin: 4px;
+  }
+  .flow-arrow { color: var(--accent); margin: 0 8px; font-size: 18px; }
+  @media (max-width: 900px) {
+    nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    main { margin-left: 0; padding: 24px; }
+  }
+  .badge.rabbit { background: rgba(255,107,53,.2); color: #ff6b35; }
+</style>
+</head>
+<body>
+
+<nav>
+  <h2>Introducción</h2>
+  <a href="#inicio">Inicio</a>
+  <a href="#arquitectura">Arquitectura</a>
+  <a href="#stack">Stack Tecnológico</a>
+
+  <h2>Proyecto</h2>
+  <a href="#estructura">Estructura de Carpetas</a>
+  <a href="#config">Configuración</a>
+  <a href="#seguridad">Seguridad</a>
+
+  <h2>Paquetes</h2>
+  <a href="#entity">Entity</a>
+  <a href="#repository">Repository</a>
+  <a href="#service">Service</a>
+  <a href="#controller">Controller</a>
+  <a href="#dto">DTO</a>
+  <a href="#exception">Exception</a>
+  <a href="#filter">Filter</a>
+  <a href="#config-pkg">Config</a>
+
+  <h2>API</h2>
+  <a href="#endpoints-auth">Auth</a>
+  <a href="#endpoints-users">Usuarios</a>
+  <a href="#endpoints-mp">Mesa Partes</a>
+  <a href="#endpoints-ext">Externos</a>
+
+  <h2>Base de Datos</h2>
+  <a href="#db-schema">Esquema</a>
+  <a href="#db-relaciones">Relaciones</a>
+
+  <h2>Desarrollo</h2>
+  <a href="#setup">Setup Local</a>
+  <a href="#testing">Testing</a>
+  <a href="#deploy">Deploy</a>
+</nav>
+
+<main>
+<h1 id="inicio">Mesa Partes Virtual</h1>
+<p>Documentación técnica del backend — Spring Boot 3.2 + JWT + PostgreSQL</p>
+
+<div class="card">
+  <strong>Proyecto:</strong> <code>com.emtap:mesapartes</code> &nbsp;|&nbsp;
+  <strong>Java:</strong> 17 &nbsp;|&nbsp;
+  <strong>Spring Boot:</strong> 3.2.1 &nbsp;|&nbsp;
+  <strong>Puerto:</strong> 9000 &nbsp;|&nbsp;
+  <strong>Base de datos:</strong> PostgreSQL (sgd-emapat)
+</div>
+
+<!-- ============= ARQUITECTURA ============= -->
+<h2 id="arquitectura">Arquitectura</h2>
+<p>API REST monolitica con capas: Controller → Service → Repository → Entity. Autenticación stateless via JWT.</p>
+
+<div class="flow-diagram">
+  <span class="flow-step">Cliente (Web/Mobile)</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Controller</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Service</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Repository</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">PostgreSQL</span>
+  <br>
+  <span class="flow-step" style="margin-top:8px;">JWT Filter</span>
+  <span class="flow-arrow">↕</span>
+  <span class="flow-step">SecurityContext</span>
+  <span class="flow-arrow">↕</span>
+  <span class="flow-step">RENIEC / SUNAT API</span>
+</div>
+
+<h3>Patrones de Diseño</h3>
+<table>
+  <tr><th>Patrón</th><th>Implementación</th></tr>
+  <tr><td>Layered Architecture</td><td>Controller → Service → Repository → Entity</td></tr>
+  <tr><td>DTO</td><td>Separación entre entidades JPA y objetos de request/response</td></tr>
+  <tr><td>Repository</td><td>Spring Data JPA abstrae acceso a BD</td></tr>
+  <tr><td>Adapter</td><td><code>UserDetailsImpl</code> adapta <code>User</code> a <code>UserDetails</code> de Spring Security</td></tr>
+  <tr><td>Chain of Responsibility</td><td>Filtros Spring Security + <code>JwtAuthenticationFilter</code></td></tr>
+  <tr><td>Global Error Handler</td><td><code>@RestControllerAdvice</code> centraliza manejo de excepciones</td></tr>
+  <tr><td>Async</td><td>Envío de correos en segundo plano con <code>@Async</code></td></tr>
+  <tr><td>Factory Method</td><td><code>UserDetailsImpl.create()</code>, <code>UserNotFoundException.withId()</code></td></tr>
+</table>
+
+<!-- ============= STACK ============= -->
+<h2 id="stack">Stack Tecnológico</h2>
+<table>
+  <tr><th>Dependencia</th><th>Versión</th><th>Propósito</th></tr>
+  <tr><td>Spring Boot Starter Web</td><td>3.2.1</td><td>API REST</td></tr>
+  <tr><td>Spring Boot Starter Security</td><td>3.2.1</td><td>Autenticación/autorización</td></tr>
+  <tr><td>Spring Boot Starter Data JPA</td><td>3.2.1</td><td>ORM / Hibernate</td></tr>
+  <tr><td>Spring Boot Starter Mail</td><td>3.2.1</td><td>JavaMailSender</td></tr>
+  <tr><td>Spring Boot Starter WebFlux</td><td>3.2.1</td><td>WebClient reactivo</td></tr>
+  <tr><td>Spring Boot Starter AMQP</td><td>3.2.1</td><td>RabbitMQ (no utilizado aún)</td></tr>
+  <tr><td>jjwt (api / impl / jackson)</td><td>0.12.3</td><td>Tokens JWT (HS256)</td></tr>
+  <tr><td>PostgreSQL JDBC</td><td>42.7.7</td><td>Driver PostgreSQL</td></tr>
+  <tr><td>Lombok</td><td>—</td><td>Boilerplate</td></tr>
+  <tr><td>H2 (test)</td><td>—</td><td>BD en memoria para testing</td></tr>
+</table>
+
+<!-- ============= ESTRUCTURA ============= -->
+<h2 id="estructura">Estructura de Carpetas</h2>
+<pre><code>src/main/java/com/emtap/mesapartes/
+├── InicioApplication.java              # Entry point (@SpringBootApplication)
+├── config/                             # Configuraciones Spring
+│   ├── DataInitializer.java            # Datos semilla al iniciar
+│   ├── MailConfig.java                 # 2 JavaMailSender (tramite + mesapartes)
+│   ├── SecurityConfig.java             # Security filter chain, CORS, AuthProvider
+│   └── WebClientConfig.java            # WebClient para APIs externas
+├── controller/                         # Capa REST
+│   ├── AuthController.java             # /api/auth/*
+│   ├── ProtectedController.java        # /api/protected/* (demo)
+│   ├── PublicController.java           # /api/public/health, /api/public/buscar
+│   ├── UserController.java             # /api/users/* (CRUD admin)
+│   ├── mesapartes/
+│   │   └── MesaPartesController.java   # /api/public/expediente, listaTipoDocumento
+│   └── reniec/
+│       └── ReniecController.java       # /reniec/buscar, listar, refrescar
+├── dto/                                # Data Transfer Objects
+│   ├── LoginRequest.java / RegisterRequest.java / JwtResponse.java / UserResponse.java / ErrorResponse.java
+│   ├── mesapartes/                     # DocumentoExtRecepBean, ExpedienteDocExtRecepBean, RemitenteDocExtRecepBean, RemitoRequestDTO
+│   ├── reniec/                         # Persona.java
+│   └── sunat/                          # EmpresaSunat.java, PersonaJuridica.java
+├── entity/                             # JPA Entities
+│   ├── User.java / Role.java
+│   ├── mesapartes/                     # Expediente, Remito, ArchivosDoc, AnexosDoc, TipoDocumento, IdTanirs (+ IDs)
+│   ├── reniec/                         # Ubigeo.java
+│   └── sunat/                          # LgProProveedor.java
+├── exception/                          # Excepciones + GlobalExceptionHandler
+├── filter/                             # JwtAuthenticationFilter
+├── repository/                         # Spring Data JPA Repositories
+│   ├── UserRepository.java / RoleRepository.java
+│   ├── mesapartes/                     # Expediente, Remito, ArchivoDoc, AnexosDoc, TipoDocumento, IdTanirs
+│   ├── reniec/                         # UbigeoRepository
+│   └── sunat/                          # LgProProveedorRepository
+├── service/                            # Lógica de negocio
+│   ├── AuthService.java / JwtService.java / CustomUserDetailsService.java / UserDetailsImpl.java
+│   ├── mesapartes/                     # ExpedienteService, RemitoService, ArchivoDocService, EmailService, EmailTemplateLoader, ExpedienteDecisionService, PersonaService
+│   ├── reniec/                         # ApiReniecService, UbigeoService
+│   ├── sunat/                          # ApiSunatService, ProveedorService
+│   └── listas/                         # ListasCacheService
+└── utils/                              # Utils.java
+
+src/test/java/com/emtap/mesapartes/
+├── SecurityIntegrationTest.java        # Test integración completo
+├── TestDataHelper.java                 # Factoria datos de prueba
+├── controller/
+│   ├── AuthControllerTest.java         # Test unitario AuthController
+│   └── UserControllerTest.java         # Test unitario UserController
+└── service/
+    └── JwtServiceTest.java             # Test unitario JwtService</code></pre>
+
+<!-- ============= CONFIG ============= -->
+<h2 id="config">Configuración</h2>
+<p><code>src/main/resources/application.properties</code></p>
+<table>
+  <tr><th>Propiedad</th><th>Valor</th><th>Descripción</th></tr>
+  <tr><td><code>server.port</code></td><td>9000</td><td>Puerto del servidor</td></tr>
+  <tr><td><code>spring.servlet.multipart.max-file-size</code></td><td>100MB</td><td>Tamaño máximo por archivo</td></tr>
+  <tr><td><code>spring.servlet.multipart.max-request-size</code></td><td>500MB</td><td>Tamaño máximo total del request</td></tr>
+  <tr><td><code>app.jwt.secret</code></td><td>—</td><td>Clave secreta para firmar JWT (mín 256 bits)</td></tr>
+  <tr><td><code>app.jwt.expiration</code></td><td>1800000</td><td>Duración del token (30 min)</td></tr>
+  <tr><td><code>spring.datasource.url</code></td><td>jdbc:postgresql://192.168.3.232:5432/sgd-emapat</td><td>Conexión a BD</td></tr>
+  <tr><td><code>spring.jpa.hibernate.ddl-auto</code></td><td>update</td><td>Hibernate actualiza esquema automáticamente</td></tr>
+  <tr><td><code>mail.tramite.*</code></td><td>—</td><td>Cuenta para envío de notificaciones internas</td></tr>
+  <tr><td><code>mail.mesapartes.*</code></td><td>—</td><td>Cuenta para respuesta al ciudadano</td></tr>
+  <tr><td><code>app.base-url</code></td><td>http://sgd.emapat.com.pe:9000</td><td>URL base para enlaces en correos</td></tr>
+  <tr><td><code>decolecta.token</code></td><td>—</td><td>Token Bearer para APIs RENIEC/SUNAT</td></tr>
+  <tr><td><code>remito.*</code></td><td>—</td><td>Valores por defecto para remitos (local, dependencia, etc.)</td></tr>
+</table>
+
+<!-- ============= SEGURIDAD ============= -->
+<h2 id="seguridad">Seguridad</h2>
+<div class="card">
+  <h4>Autenticación Stateless con JWT</h4>
+  <ol>
+    <li><strong>Login:</strong> usuario/envía credenciales → <code>POST /api/auth/login</code></li>
+    <li><strong>Validación:</strong> <code>AuthenticationManager</code> verifica contra BD (BCrypt)</li>
+    <li><strong>Token:</strong> <code>JwtService</code> genera JWT firmado con HS256 + secret</li>
+    <li><strong>Request:</strong> Cliente envía <code>Authorization: Bearer &lt;token&gt;</code></li>
+    <li><strong>Filtro:</strong> <code>JwtAuthenticationFilter</code> extrae, valida y establece SecurityContext</li>
+  </ol>
+</div>
+
+<h3>Roles</h3>
+<table>
+  <tr><th>Rol</th><th>Prefijo</th><th>Acceso</th></tr>
+  <tr><td>USER</td><td><code>ROLE_USER</code></td><td>Endpoints autenticados básicos</td></tr>
+  <tr><td>ADMIN</td><td><code>ROLE_ADMIN</code></td><td>Gestión de usuarios, estadísticas</td></tr>
+</table>
+
+<h3>Endpoints Públicos vs Protegidos</h3>
+<table>
+  <tr><th>Categoría</th><th>Endpoints</th></tr>
+  <tr><td><span class="badge public">Público</span></td><td><code>/api/auth/register</code>, <code>/api/auth/login</code>, <code>/api/auth/generartoken</code>, <code>/api/public/**</code>, <code>/reniec/**</code>, <code>/actuator/health</code></td></tr>
+  <tr><td><span class="badge auth">Autenticado</span></td><td><code>/api/auth/profile</code>, <code>/api/auth/test</code>, <code>/api/protected/**</code></td></tr>
+  <tr><td><span class="badge admin">Admin</span></td><td><code>/api/users/**</code>, <code>/api/admin/**</code></td></tr>
+</table>
+
+<h3>Configuración CORS</h3>
+<pre><code>Orígenes permitidos: http://localhost:3000, :4200, :8080, :5173, * (temporal)
+Métodos: GET, POST, PUT, DELETE, OPTIONS, PATCH
+Headers: *
+Credentials: true</code></pre>
+
+<!-- ============= ENTITY ============= -->
+<h2 id="entity">Entity</h2>
+
+<h3>Autenticación</h3>
+<table>
+  <tr><th>Clase</th><th>Tabla</th><th>PK</th><th>Descripción</th></tr>
+  <tr><td><code>User</code></td><td><code>users</code></td><td>id (Long, auto)</td><td>Usuario del sistema. Campos: username (unique), password (BCrypt), email (unique), enabled (boolean). <code>@ManyToMany</code> → <code>Role</code> via <code>user_roles</code></td></tr>
+  <tr><td><code>Role</code></td><td><code>roles</code></td><td>id (Long, auto)</td><td>Rol: name (unique). Valores: <code>ROLE_USER</code>, <code>ROLE_ADMIN</code></td></tr>
+</table>
+
+<h3>Mesa Partes (schema <code>idosgd</code>)</h3>
+<table>
+  <tr><th>Clase</th><th>Tabla</th><th>PK (Composite)</th><th>Campos clave</th></tr>
+  <tr><td><code>Expediente</code></td><td><code>tdtc_expediente</code></td><td><code>ExpedienteId</code>: nu_ann_exp + nu_sec_exp</td><td>fechaExpediente, codigoProceso, detalle, codigoDependencia, codigoGrupo, numeroCorrelativo, numeroExpediente, numeroFolios, tipoRecepcionMesaPartes, codigoTipoExpediente, clave, numeroCuo</td></tr>
+  <tr><td><code>Remito</code></td><td><code>tdtv_remitos</code></td><td><code>RemitoId</code>: nu_ann + nu_emi</td><td>codigoLocalEmision, codigoDependenciaEmision, tipoEmision, dniEmisor, rucEmisor, asunto, estadoDocumentoEmision, origenEmision, correoExpediente, telefono, direccionRemitente, ubigeo (dep/prov/dis)</td></tr>
+  <tr><td><code>ArchivosDoc</code></td><td><code>tdtv_archivo_doc</code></td><td><code>ArchivoDocId</code>: nu_ann + nu_emi</td><td>blDoc (bytea), rutaOrigen, rutaDestino, esFirma, blDocEdit. <code>@ManyToOne</code> → Remito</td></tr>
+  <tr><td><code>AnexosDoc</code></td><td><code>tdtv_anexos</code></td><td><code>AnexosDocId</code>: nu_ann + nu_emi + nu_ane</td><td>blDoc (bytea), detalleNombre, detalleRuta, publico</td></tr>
+  <tr><td><code>TipoDocumento</code></td><td><code>si_mae_tipo_doc</code></td><td>cdoc_tipdoc (String)</td><td>cdoc_desdoc (descripción), cdoc_indbaj (baja lógica)</td></tr>
+  <tr><td><code>IdTanirs</code></td><td><code>idtanirs</code></td><td>nulem (DNI)</td><td>Datos personales: nombres, apellidos, ubigeo, dirección, email, teléfono</td></tr>
+</table>
+
+<h3>Sunat</h3>
+<table>
+  <tr><th>Clase</th><th>Tabla</th><th>PK</th><th>Campos clave</th></tr>
+  <tr><td><code>LgProProveedor</code></td><td><code>lg_pro_proveedor</code></td><td>cpro_ruc (String)</td><td>cpro_razsoc (razón social), cpro_domicil (dirección), cpro_ubigeo, ubigeo (dep/prov/dis)</td></tr>
+</table>
+
+<h3>Reniec</h3>
+<table>
+  <tr><th>Clase</th><th>Tabla</th><th>PK</th><th>Campos clave</th></tr>
+  <tr><td><code>Ubigeo</code></td><td><code>tb_ubigeo</code></td><td>id (String)</td><td>nomdep (departamento), nomprov (provincia), nomdis (distrito). Campo transient: nombreCompleto</td></tr>
+</table>
+
+<!-- ============= REPOSITORY ============= -->
+<h2 id="repository">Repository</h2>
+<p>Todos extienden <code>JpaRepository&lt;T, ID&gt;</code>. Cada uno hereda métodos CRUD, paginación y sorting.</p>
+<table>
+  <tr><th>Repository</th><th>Entity</th><th>Métodos personalizados</th></tr>
+  <tr><td><code>UserRepository</code></td><td>User</td><td><code>findByUsername</code>, <code>findByEmail</code>, <code>existsByUsername</code>, <code>existsByEmail</code>, <code>findByUsernameContainingIgnoreCase</code>, <code>countByEnabledTrue</code></td></tr>
+  <tr><td><code>RoleRepository</code></td><td>Role</td><td><code>findByName</code>, <code>existsByName</code>, <code>deleteByName</code></td></tr>
+  <tr><td><code>ExpedienteRepository</code></td><td>Expediente</td><td><code>@Query getNextSecuencia(@Param("anio") Integer anio)</code> — SELECT MAX + 1<br><code>@Query getNextCorrExp(@Param("anio") Integer anio)</code> — SELECT MAX + 1</td></tr>
+  <tr><td><code>RemitoRepository</code></td><td>Remito</td><td><code>@Query(native) getNextNuEmi()</code> — usa secuencia <code>IDOSGD.SEC_REMITOS_NU_EMI</code><br><code>@Query getNuCorEmi(@Param("anio") Integer anio)</code><br><code>findByAnioAndNumeroEmision</code></td></tr>
+  <tr><td><code>TipoDocumentoRepository</code></td><td>TipoDocumento</td><td><code>findByCdocIndbajNot(String)</code></td></tr>
+  <tr><td><code>IdTanirsRepository</code></td><td>IdTanirs</td><td><code>existsByNulem(String)</code></td></tr>
+</table>
+
+<!-- ============= SERVICE ============= -->
+<h2 id="service">Service</h2>
+
+<h3>Autenticación</h3>
+<table>
+  <tr><th>Clase</th><th>Métodos clave</th><th>Descripción</th></tr>
+  <tr><td><code>AuthService</code></td><td><code>register()</code>, <code>login()</code>, <code>generarToken()</code>, <code>getCurrentUserProfile()</code></td><td>Orquestra registro, login y obtención de perfil del usuario autenticado</td></tr>
+  <tr><td><code>JwtService</code></td><td><code>generateToken(username)</code>, <code>generateToken(UserDetails)</code>, <code>getUsernameFromToken()</code>, <code>validateToken()</code>, <code>isTokenValid()</code>, <code>isTokenExpired()</code></td><td>Genera, valida y extrae información de tokens JWT (algoritmo HS256). Usa <code>@Value</code> para secret y expiration</td></tr>
+  <tr><td><code>CustomUserDetailsService</code></td><td><code>loadUserByUsername()</code>, <code>loadUserById()</code>, <code>existsByUsername()</code>, <code>existsByEmail()</code></td><td>Implementa <code>UserDetailsService</code> de Spring Security. Busca en BD y retorna <code>UserDetailsImpl</code></td></tr>
+</table>
+
+<h3>Mesa Partes (Core)</h3>
+<table>
+  <tr><th>Clase</th><th>Métodos clave</th><th>Descripción</th></tr>
+  <tr><td><code>ExpedienteService</code></td><td><code>procesarExpediente()</code>, <code>procesarExpedienteCompleto()</code>, <code>insExpedienteBean()</code>, <code>listarTipoDocumento()</code></td><td>Flujo completo de registro de expediente: consulta RENIEC/SUNAT, registra persona/proveedor, crea expediente con ID secuencial, crea remito con nuEmi desde secuencia DB, guarda archivo y anexos, envía notificación email</td></tr>
+  <tr><td><code>RemitoService</code></td><td><code>insDocumentoExtBean()</code></td><td>Construye y persiste un Remito con todos los campos desde los DTOs + propiedades configuradas (<code>@Value</code>)</td></tr>
+  <tr><td><code>ArchivoDocService</code></td><td><code>guardarArchivo()</code></td><td>Guarda/actualiza archivo en <code>tdtv_archivo_doc</code>, maneja DOCX con columna <code>w_bl_doc</code></td></tr>
+  <tr><td><code>EmailService</code></td><td><code>enviarNotificacionMesaPartes()</code>, <code>enviarRespuestaRemitente()</code></td><td><code>@Async</code> — Envía correos HTML con templates. Usa 2 cuentas distintas (tramite → notificación, mesapartes → respuesta)</td></tr>
+  <tr><td><code>ExpedienteDecisionService</code></td><td><code>procesarAceptacion()</code>, <code>procesarRechazo()</code>, <code>generarFormularioRechazo()</code></td><td>Procesa aceptación/rechazo desde enlaces en correos. Retorna HTML</td></tr>
+  <tr><td><code>EmailTemplateLoader</code></td><td><code>cargar(nombre, variables)</code>, <code>cargarSinEscape()</code></td><td>Carga templates HTML desde <code>classpath:templates/email/</code> y reemplaza variables <code>{{var}}</code></td></tr>
+  <tr><td><code>PersonaService</code></td><td><code>registrarSiNoExiste(Persona)</code></td><td>Verifica en <code>IdTanirs</code> por DNI; si no existe, inserta</td></tr>
+  <tr><td><code>ListasCacheService</code></td><td><code>refrescar()</code></td><td><code>@PostConstruct</code> — Carga todos los Ubigeos en memoria al iniciar la aplicación</td></tr>
+</table>
+
+<h3>APIs Externas</h3>
+<table>
+  <tr><th>Clase</th><th>Método</th><th>API Externa</th><th>Autenticación</th></tr>
+  <tr><td><code>ApiReniecService</code></td><td><code>obtenerDatos(dni)</code> → <code>Mono&lt;Persona&gt;</code></td><td><code>GET /v1/reniec/dni?numero={dni}</code></td><td>Bearer token (decolecta.token)</td></tr>
+  <tr><td><code>ApiSunatService</code></td><td><code>obtenerDatos(ruc)</code> → <code>Mono&lt;EmpresaSunat&gt;</code></td><td><code>GET /v1/sunat/ruc?numero={ruc}</code></td><td>Bearer token (decolecta.token)</td></tr>
+  <tr><td><code>ProveedorService</code></td><td><code>registrarSiNoExiste(EmpresaSunat)</code></td><td>— (solo BD local)</td><td>—</td></tr>
+  <tr><td><code>UbigeoService</code></td><td><code>obtenerListaUbigeo()</code></td><td>— (solo BD local)</td><td>—</td></tr>
+</table>
+
+<p>API Decolecta base URL: <code>https://api.decolecta.com/</code>. Timeout: 10s. Configurado en <code>WebClientConfig</code>.</p>
+
+<!-- ============= CONTROLLER ============= -->
+<h2 id="controller">Controller</h2>
+
+<h3 id="endpoints-auth">Auth <code>/api/auth</code></h3>
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th><th>Request</th><th>Response</th></tr>
+  <tr><td><span class="badge post">POST</span></td><td><code>/api/auth/register</code></td><td><span class="badge public">Público</span></td><td><code>RegisterRequest</code> (JSON)</td><td><code>UserResponse</code> (201 Created)</td></tr>
+  <tr><td><span class="badge post">POST</span></td><td><code>/api/auth/login</code></td><td><span class="badge public">Público</span></td><td><code>LoginRequest</code> (JSON)</td><td><code>JwtResponse</code> (token + user)</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/auth/generartoken</code></td><td><span class="badge public">Público</span></td><td>—</td><td><code>JwtResponse</code> (auto-login hardcoded)</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/auth/profile</code></td><td><span class="badge auth">Auth</span></td><td>—</td><td><code>UserResponse</code></td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/auth/test</code></td><td><span class="badge auth">Auth</span></td><td>—</td><td>String ("token válido")</td></tr>
+</table>
+
+<h3 id="endpoints-users">Usuarios <code>/api/users</code> (Admin)</h3>
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th><th>Descripción</th></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/users?page=0&size=20&sortBy=id&direction=asc</code></td><td><span class="badge admin">Admin</span></td><td>Lista paginada de usuarios</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/users/{id}</code></td><td><span class="badge admin">Admin</span></td><td>Obtener usuario por ID</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/users/search?username=</code></td><td><span class="badge admin">Admin</span></td><td>Buscar por username (LIKE)</td></tr>
+  <tr><td><span class="badge put">PUT</span></td><td><code>/api/users/{id}/toggle-status</code></td><td><span class="badge admin">Admin</span></td><td>Habilitar/deshabilitar usuario</td></tr>
+  <tr><td><span class="badge delete">DELETE</span></td><td><code>/api/users/{id}</code></td><td><span class="badge admin">Admin</span></td><td>Eliminar usuario</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/users/stats</code></td><td><span class="badge admin">Admin</span></td><td>Estadísticas (totales, activos, inactivos, tasa)</td></tr>
+</table>
+
+<h3 id="endpoints-mp">Mesa Partes <code>/api/public</code></h3>
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th><th>Descripción</th></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/public/listaTipoDocumento</code></td><td><span class="badge public">Público</span></td><td>Lista tipos de documento activos</td></tr>
+  <tr><td><span class="badge post">POST</span></td><td><code>/api/public/expediente</code> (multipart)</td><td><span class="badge public">Público</span></td><td>Registrar expediente + archivo + anexos</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/public/expediente/{nuAnn}/{nuEmi}/aceptar</code></td><td><span class="badge public">Público</span></td><td>Aceptar expediente (HTML)</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/public/expediente/{nuAnn}/{nuEmi}/rechazar</code></td><td><span class="badge public">Público</span></td><td>Formulario de rechazo (HTML)</td></tr>
+  <tr><td><span class="badge post">POST</span></td><td><code>/api/public/expediente/{nuAnn}/{nuEmi}/rechazar</code></td><td><span class="badge public">Público</span></td><td>Procesar rechazo con motivo</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/public/health</code></td><td><span class="badge public">Público</span></td><td>Health check</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/public/buscar?ruc=</code></td><td><span class="badge public">Público</span></td><td>Buscar SUNAT por RUC</td></tr>
+</table>
+
+<h3 id="endpoints-ext">RENIEC / Ubigeo <code>/reniec</code></h3>
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th><th>Descripción</th></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/reniec/buscar?dni=</code></td><td><span class="badge public">Público</span></td><td>Buscar persona por DNI vía API RENIEC</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/reniec/listar?q=</code></td><td><span class="badge public">Público</span></td><td>Listar/filtrar ubigeos</td></tr>
+  <tr><td><span class="badge post">POST</span></td><td><code>/reniec/refrescar</code></td><td><span class="badge public">Público</span></td><td>Refrescar caché de ubigeos</td></tr>
+</table>
+
+<h3>Demostración <code>/api/protected</code></h3>
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/protected/user</code></td><td><span class="badge auth">Auth</span></td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/protected/admin</code></td><td><span class="badge admin">Admin</span></td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/protected/user-only</code></td><td><span class="badge auth">USER</span></td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/protected/advanced</code></td><td>ADMIN or USER</td></tr>
+  <tr><td><span class="badge get">GET</span></td><td><code>/api/protected/ping</code></td><td><span class="badge auth">Auth</span></td></tr>
+</table>
+
+<!-- ============= DTO ============= -->
+<h2 id="dto">DTO</h2>
+<table>
+  <tr><th>Clase</th><th>Paquete</th><th>Campos</th><th>Validaciones</th></tr>
+  <tr><td><code>LoginRequest</code></td><td>dto</td><td>username, password</td><td>@NotBlank, @Size(min=3, max=50) / @NotBlank, @Size(min=6, max=100)</td></tr>
+  <tr><td><code>RegisterRequest</code></td><td>dto</td><td>username, email, password, confirmPassword</td><td>@NotBlank, @Email / @Size(min=8, max=100), @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).+$")</td></tr>
+  <tr><td><code>JwtResponse</code></td><td>dto</td><td>token, type("Bearer"), id, username, email, roles</td><td>—</td></tr>
+  <tr><td><code>UserResponse</code></td><td>dto</td><td>id, username, email, enabled, roles</td><td>—</td></tr>
+  <tr><td><code>ErrorResponse</code></td><td>dto</td><td>timestamp, status, error, message, path, validationErrors</td><td>—</td></tr>
+  <tr><td><code>RemitoRequestDTO</code></td><td>dto.mesapartes</td><td>documento, expediente, remitente (beans anidados)</td><td>—</td></tr>
+  <tr><td><code>DocumentoExtRecepBean</code></td><td>dto.mesapartes</td><td>99 campos: nuDoc, deAsu, coTipDocAdm, etc.</td><td>—</td></tr>
+  <tr><td><code>RemitenteDocExtRecepBean</code></td><td>dto.mesapartes</td><td>43 campos: nuDni, nuRuc, deCorreo, nombre, apellidos, ubigeo</td><td>—</td></tr>
+  <tr><td><code>ExpedienteDocExtRecepBean</code></td><td>dto.mesapartes</td><td>28 campos: nuAnnExp, nuSecExp, feExp, etc.</td><td>—</td></tr>
+  <tr><td><code>Persona</code></td><td>dto.reniec</td><td>first_name, first_last_name, second_last_name, document_number</td><td>—</td></tr>
+  <tr><td><code>EmpresaSunat</code></td><td>dto.sunat</td><td>numero_documento, razon_social, nombre_comercial, estado, condicion, direccion, ubigeo, dep/prov/dis</td><td>—</td></tr>
+</table>
+
+<!-- ============= EXCEPTION ============= -->
+<h2 id="exception">Exception</h2>
+<table>
+  <tr><th>Excepción</th><th>HTTP Status</th><th>Cuándo se lanza</th></tr>
+  <tr><td><code>InvalidCredentialsException</code></td><td>401</td><td>Login fallido (usuario/contraseña incorrectos)</td></tr>
+  <tr><td><code>UserAlreadyExistsException</code></td><td>409</td><td>Registro con username o email duplicado</td></tr>
+  <tr><td><code>UserNotFoundException</code></td><td>404</td><td>Usuario no encontrado por ID o username. Métodos estáticos: <code>withId()</code>, <code>withUsername()</code></td></tr>
+  <tr><td><code>ExternalApiException</code></td><td>Dinámico</td><td>Error al llamar API externa (RENIEC/SUNAT). Campos: statusCode, responseBody</td></tr>
+</table>
+
+<h3>GlobalExceptionHandler</h3>
+<p><code>@RestControllerAdvice</code> que centraliza el manejo de errores:</p>
+<table>
+  <tr><th>Excepción capturada</th><th>Status</th><th>Response</th></tr>
+  <tr><td><code>MethodArgumentNotValidException</code></td><td>400</td><td>Lista de errores de validación por campo</td></tr>
+  <tr><td><code>ConstraintViolationException</code></td><td>400</td><td>Errores de constraints (@Min, @Max, etc.)</td></tr>
+  <tr><td><code>UserAlreadyExistsException</code></td><td>409</td><td>Mensaje de conflicto</td></tr>
+  <tr><td><code>UserNotFoundException</code></td><td>404</td><td>Mensaje "no encontrado"</td></tr>
+  <tr><td><code>InvalidCredentialsException</code></td><td>401</td><td>Credenciales inválidas</td></tr>
+  <tr><td><code>AuthenticationException / BadCredentialsException</code></td><td>401</td><td>Error de autenticación</td></tr>
+  <tr><td><code>AccessDeniedException</code></td><td>403</td><td>Sin permisos</td></tr>
+  <tr><td><code>ExternalApiException</code></td><td>Dinámico</td><td>Error de API externa</td></tr>
+  <tr><td><code>Exception</code> (catch-all)</td><td>500</td><td>Error interno</td></tr>
+</table>
+
+<!-- ============= FILTER ============= -->
+<h2 id="filter">Filter: JwtAuthenticationFilter</h2>
+<p>Extiende <code>OncePerRequestFilter</code>. Se ejecuta en cada request antes de <code>UsernamePasswordAuthenticationFilter</code>.</p>
+<ol>
+  <li>Extrae header <code>Authorization: Bearer &lt;token&gt;</code></li>
+  <li>Si no hay token → continúa la cadena (no autenticado)</li>
+  <li>Extrae username del token via <code>JwtService.getUsernameFromToken()</code></li>
+  <li>Carga <code>UserDetails</code> via <code>CustomUserDetailsService.loadUserByUsername()</code></li>
+  <li>Valida token con <code>JwtService.validateToken()</code></li>
+  <li>Establece <code>UsernamePasswordAuthenticationToken</code> en <code>SecurityContextHolder</code></li>
+  <li>Manejo de excepciones: <code>ExpiredJwtException</code> → 401, <code>SignatureException</code> → 401, <code>MalformedJwtException</code> → 400</li>
+</ol>
+
+<!-- ============= CONFIG ============= -->
+<h2 id="config-pkg">Config</h2>
+<table>
+  <tr><th>Clase</th><th>Beans / Funcionalidad</th></tr>
+  <tr><td><code>SecurityConfig</code></td><td><code>SecurityFilterChain</code> (CSRF off, CORS custom, rutas públicas, stateless, JWT filter), <code>CorsConfigurationSource</code>, <code>AuthenticationProvider</code> (DaoAuthenticationProvider + BCrypt), <code>AuthenticationManager</code>, <code>PasswordEncoder</code></td></tr>
+  <tr><td><code>WebClientConfig</code></td><td><code>WebClient</code> con base URL <code>https://api.decolecta.com/</code>, Bearer token desde <code>${decolecta.token}</code>, Accept: application/json, timeout 10s</td></tr>
+  <tr><td><code>MailConfig</code></td><td>2 × <code>JavaMailSender</code>: <code>tramiteMailSender</code> (notificaciones internas) y <code>mesapartesMailSender</code> (respuesta al ciudadano). Ambos via SMTP Gmail:587 con STARTTLS</td></tr>
+  <tr><td><code>DataInitializer</code></td><td><code>CommandLineRunner</code>: Crea roles ROLE_USER/ROLE_ADMIN y usuarios de prueba (admin/admin123, user/user123, juan, disabled) al iniciar</td></tr>
+</table>
+
+<!-- ============= DB ============= -->
+<h2 id="db-schema">Base de Datos: Esquema</h2>
+<table>
+  <tr><th>Tabla</th><th>Schema</th><th>PK</th><th>FK / Relaciones</th></tr>
+  <tr><td><code>users</code></td><td>public</td><td>id (serial)</td><td>→ user_roles (ManyToMany)</td></tr>
+  <tr><td><code>roles</code></td><td>public</td><td>id (serial)</td><td>← user_roles</td></tr>
+  <tr><td><code>user_roles</code></td><td>public</td><td>(user_id, role_id)</td><td>→ users(id), roles(id)</td></tr>
+  <tr><td><code>tdtc_expediente</code></td><td>idosgd</td><td>(nu_ann_exp, nu_sec_exp)</td><td>—</td></tr>
+  <tr><td><code>tdtv_remitos</code></td><td>idosgd</td><td>(nu_ann, nu_emi)</td><td>Unique: (nu_ann, co_dep_emi, ti_emi, co_tip_doc_adm, nu_cor_doc, nu_doc_emi)</td></tr>
+  <tr><td><code>tdtv_archivo_doc</code></td><td>idosgd</td><td>(nu_ann, nu_emi)</td><td>→ tdtv_remitos (ManyToOne, LAZY)</td></tr>
+  <tr><td><code>tdtv_anexos</code></td><td>idosgd</td><td>(nu_ann, nu_emi, nu_ane)</td><td>—</td></tr>
+  <tr><td><code>si_mae_tipo_doc</code></td><td>idosgd</td><td>cdoc_tipdoc</td><td>—</td></tr>
+  <tr><td><code>idtanirs</code></td><td>idosgd</td><td>nulem (DNI)</td><td>—</td></tr>
+  <tr><td><code>lg_pro_proveedor</code></td><td>idosgd</td><td>cpro_ruc (RUC)</td><td>—</td></tr>
+  <tr><td><code>tb_ubigeo</code></td><td>public</td><td>id</td><td>—</td></tr>
+</table>
+
+<h3 id="db-relaciones">Relaciones Clave</h3>
+<ul>
+  <li><strong>Expediente → Remito:</strong> Relación lógica (no FK explícita). Se vinculan por <code>nu_ann_exp</code> + <code>nu_sec_exp</code> en Remito ↔ <code>nu_ann_exp</code> + <code>nu_sec_exp</code> en Expediente</li>
+  <li><strong>Remito → ArchivosDoc:</strong> <code>@ManyToOne</code> (LAZY) via <code>nu_ann</code> + <code>nu_emi</code></li>
+  <li><strong>Remito → AnexosDoc:</strong> Relación lógica via <code>nu_ann</code> + <code>nu_emi</code></li>
+  <li><strong>User ↔ Role:</strong> <code>@ManyToMany</code> (EAGER) via tabla intermedia <code>user_roles</code></li>
+</ul>
+
+<h3>Secuencias</h3>
+<ul>
+  <li><code>IDOSGD.SEC_REMITOS_NU_EMI</code> — Genera el <code>nu_emi</code> para remitos (vía <code>RemitoRepository.getNextNuEmi()</code>)</li>
+  <li><code>nu_sec_exp</code> y <code>nu_cor_doc</code> — Generados vía <code>SELECT MAX(...) + 1</code> en <code>ExpedienteRepository</code></li>
+</ul>
+
+<!-- ============= SETUP ============= -->
+<h2 id="setup">Setup Local</h2>
+
+<h3>Requisitos</h3>
+<ul>
+  <li>Java 17+</li>
+  <li>Maven (o usar <code>mvnw.cmd</code> incluido)</li>
+  <li>PostgreSQL 15+ con base de datos <code>sgd-emapat</code> y schema <code>idosgd</code></li>
+</ul>
+
+<h3>Pasos</h3>
+<pre><code>git clone &lt;repo&gt;
+cd mesa_back
+
+# Configurar application.properties con tus credenciales
+# (BD, correo, token decolecta)
+
+# Compilar
+./mvnw clean compile
+
+# Ejecutar tests
+./mvnw test
+
+# Iniciar servidor
+./mvnw spring-boot:run
+
+# El servidor inicia en http://localhost:9000</code></pre>
+
+<h3>Verificar</h3>
+<pre><code># Health check
+curl http://localhost:9000/api/public/health
+
+# Login
+curl -X POST http://localhost:9000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'</code></pre>
+
+<!-- ============= TESTING ============= -->
+<h2 id="testing">Testing</h2>
+<table>
+  <tr><th>Archivo</th><th>Tipo</th><th>Framework</th><th>Descripción</th></tr>
+  <tr><td><code>JwtServiceTest</code></td><td>Unitario</td><td>Mockito + JUnit 5</td><td>Generación, validación, extracción, expiración de tokens</td></tr>
+  <tr><td><code>AuthControllerTest</code></td><td>Unitario</td><td>@WebMvcTest + Mockito</td><td>Endpoints de autenticación con servicio mockeado</td></tr>
+  <tr><td><code>UserControllerTest</code></td><td>Unitario</td><td>@WebMvcTest + Mockito</td><td>CRUD de usuarios con control de acceso por roles</td></tr>
+  <tr><td><code>SecurityIntegrationTest</code></td><td>Integración</td><td>@SpringBootTest + MockMvc</td><td>Flujo completo registro → login → request autenticado, autorización por roles, tokens inválidos</td></tr>
+  <tr><td><code>TestDataHelper</code></td><td>Utilidad</td><td>—</td><td>Factoria de datos de prueba (usuarios, DTOs, tokens)</td></tr>
+</table>
+
+<h3>Ejecutar Tests</h3>
+<pre><code># Todos
+./mvnw test
+
+# Tests unitarios solamente (excluye integración)
+./mvnw test -Dtest="com.emtap.mesapartes.service.JwtServiceTest,com.emtap.mesapartes.controller.*"
+
+# Test específico
+./mvnw test -Dtest="com.emtap.mesapartes.service.JwtServiceTest"</code></pre>
+
+<h3>Perfil de Test</h3>
+<p><code>src/test/resources/application-test.properties</code> — Usa H2 en memoria, JWT secret distinto, logging WARN.</p>
+
+<!-- ============= DEPLOY ============= -->
+<h2 id="deploy">Deploy</h2>
+
+<h3>Build Producción</h3>
+<pre><code># Generar JAR
+./mvnw clean package -DskipTests
+
+# Ejecutar JAR
+java -jar target/mesapartes-0.0.1-SNAPSHOT.jar</code></pre>
+
+<h3>Variables de Entorno (alternativa a application.properties)</h3>
+<pre><code>export SERVER_PORT=9000
+export SPRING_DATASOURCE_URL=jdbc:postgresql://...
+export SPRING_DATASOURCE_USERNAME=...
+export SPRING_DATASOURCE_PASSWORD=...
+export APP_JWT_SECRET=...
+export APP_JWT_EXPIRATION=1800000
+export MAIL_TRAMITE_USERNAME=...
+export MAIL_TRAMITE_PASSWORD=...
+export DECOLECTA_TOKEN=...</code></pre>
+
+<h3>Docker</h3>
+<p>El proyecto incluye <code>docker-compose.yml</code> con servicio RabbitMQ (aún no integrado en el código).</p>
+
+<h3>SSL</h3>
+<p>El archivo <code>keystore.p12</code> está presente en resources. Configuración SSL comentada en <code>application.properties</code> — descomentar y configurar para habilitar HTTPS.</p>
+
+<!-- ============= NOTAS ============= -->
+<h2>Notas Técnicas</h2>
+<ul>
+  <li><strong>RabbitMQ:</strong> La dependencia <code>spring-boot-starter-amqp</code> está incluida pero no hay código que la use. El <code>docker-compose.yml</code> define el servicio listo para usar.</li>
+  <li><strong>Mails:</strong> Se usan 2 cuentas SMTP distintas. La cuenta <code>tramite.documentario</code> envía notificaciones internas; la cuenta <code>mesadepartesvirtual</code> envía respuestas al ciudadano.</li>
+  <li><strong>Templates Email:</strong> 4 templates HTML en <code>classpath:templates/email/</code> con variables <code>{{var}}</code>. Usan <code>EmailTemplateLoader</code> para carga y reemplazo.</li>
+  <li><strong>Async:</strong> El envío de correos usa <code>@Async</code> (habilitado via <code>@EnableAsync</code> en <code>InicioApplication</code>).</li>
+  <li><strong>Secuencia DB:</strong> <code>IDOSGD.SEC_REMITOS_NU_EMI</code> debe existir en la BD. Si no existe, crearla manualmente.</li>
+  <li><strong>@Value:</strong> Los valores por defecto de remitos se inyectan desde <code>application.properties</code> (prefijo <code>remito.*</code>).</li>
+  <li><strong>Cache:</strong> <code>ListasCacheService</code> carga ubigeos en memoria al iniciar (<code>@PostConstruct</code>).</li>
+</ul>
+
+</main>
+</body>
+</html>

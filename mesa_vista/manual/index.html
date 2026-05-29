@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesa de Partes Virtual — Manual de Usuario</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #f4f7fa;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    .header {
+      background: linear-gradient(135deg, #1e3a5f, #2d5f87);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .header p { font-size: 1rem; opacity: .85; }
+    .container { max-width: 960px; margin: 0 auto; padding: 30px 20px 60px; }
+    .toc {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      margin-bottom: 32px;
+    }
+    .toc h2 { font-size: 1.1rem; margin-bottom: 12px; color: #1e3a5f; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 6px; }
+    .toc a { color: #2d5f87; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 28px 30px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      margin-bottom: 28px;
+    }
+    section h2 {
+      font-size: 1.35rem;
+      color: #1e3a5f;
+      border-bottom: 3px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    section h3 {
+      font-size: 1.1rem;
+      color: #2d5f87;
+      margin: 18px 0 10px;
+    }
+    section p { margin-bottom: 12px; }
+    ul, ol { padding-left: 20px; margin-bottom: 14px; }
+    li { margin-bottom: 4px; }
+    .screenshot {
+      margin: 16px 0 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .screenshot img { width: 100%; display: block; }
+    .screenshot .caption {
+      background: #f8fafc;
+      padding: 8px 14px;
+      font-size: .85rem;
+      color: #475569;
+      border-top: 1px solid #e2e8f0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: .9rem;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th { background: #f1f5f9; font-weight: 600; color: #1e3a5f; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .badge-yes { background: #dcfce7; color: #166534; }
+    .badge-no { background: #f1f5f9; color: #64748b; }
+    .info-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: .9rem;
+    }
+    .info-box.important { background: #fef9c3; border-left-color: #eab308; }
+    .info-box.success { background: #f0fdf4; border-left-color: #22c55e; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      font-size: .85rem;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .step-grid .step {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+    .step-grid .step span { display: block; font-size: 1.5rem; margin-bottom: 4px; }
+    .step-grid .step.active { background: #2d5f87; color: #fff; }
+    @media (max-width: 640px) {
+      .container { padding: 16px 12px; }
+      section { padding: 18px 16px; }
+      .step-grid { grid-template-columns: 1fr; }
+      table { font-size: .8rem; }
+      th, td { padding: 6px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Mesa de Partes Virtual</h1>
+  <p>Manual de Usuario — Guía completa para el registro de documentos</p>
+</div>
+
+<div class="container">
+
+  <!-- Índice -->
+  <div class="toc">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#inicio">Página de Inicio</a></li>
+      <li><a href="#pn">Registro como Persona Natural</a>
+        <ol>
+          <li><a href="#pn-paso1">Paso 1 — Datos Personales</a></li>
+          <li><a href="#pn-paso2">Paso 2 — Documentos</a></li>
+          <li><a href="#pn-paso3">Paso 3 — Final</a></li>
+        </ol>
+      </li>
+      <li><a href="#pj">Registro como Persona Jurídica</a>
+        <ol>
+          <li><a href="#pj-paso1">Paso 1 — Datos de la Empresa</a></li>
+          <li><a href="#pj-paso2">Paso 2 — Documentos</a></li>
+          <li><a href="#pj-paso3">Paso 3 — Final</a></li>
+        </ol>
+      </li>
+      <li><a href="#confirmacion">Confirmación de Envío</a></li>
+      <li><a href="#requisitos">Requisitos y Validaciones</a></li>
+      <li><a href="#faq">Preguntas Frecuentes</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. Inicio -->
+  <section id="inicio">
+    <h2>1. Página de Inicio</h2>
+    <p>Al ingresar a la plataforma verá la siguiente pantalla:</p>
+
+    <div class="screenshot">
+      <img src="../capturas/inicio.png" alt="Página de inicio">
+      <div class="caption">Pantalla principal — Mesa de Partes Virtual</div>
+    </div>
+
+    <p>La página muestra:</p>
+    <ul>
+      <li><strong>Título:</strong> "Mesa de Partes Virtual"</li>
+      <li><strong>Subtítulo:</strong> "Presenta tus documentos de forma segura y rápida"</li>
+      <li><strong>Información importante:</strong> horarios de atención (24/7, días hábiles y feriados)</li>
+      <li><strong>Términos y condiciones:</strong> debe marcarlos para habilitar los botones de acceso</li>
+      <li><strong>Dos botones:</strong> "Continuar como Persona Natural" y "Continuar como Persona Jurídica"</li>
+    </ul>
+
+    <div class="info-box important">
+      <strong>Importante:</strong> Los documentos presentados entre las 00:00 y 23:59 horas de un día hábil se consideran como presentados ese mismo día. Los presentados en sábados, domingos o feriados se consideran recibidos el siguiente día hábil.
+    </div>
+  </section>
+
+  <!-- 2. Persona Natural -->
+  <section id="pn">
+    <h2>2. Registro como Persona Natural</h2>
+    <p>El formulario se compone de <strong>3 pasos</strong>. Puede navegar entre ellos usando los botones Siguiente y Atrás.</p>
+
+    <div class="step-grid">
+      <div class="step"><span>1</span>Datos Personales</div>
+      <div class="step"><span>2</span>Documentos</div>
+      <div class="step"><span>3</span>Final</div>
+    </div>
+
+    <h3 id="pn-paso1">Paso 1 — Datos Personales</h3>
+    <p>En este paso deberá ingresar sus datos personales. La pantalla se divide en dos secciones:</p>
+
+    <div class="screenshot">
+      <img src="../capturas/personanatural-paso1.png" alt="Persona Natural — Paso 1">
+      <div class="caption">Paso 1: Datos Personales con información de ejemplo</div>
+    </div>
+
+    <h4>Validación de identidad (lado izquierdo)</h4>
+    <ol>
+      <li><strong>Tipo de Documento*</strong> — Seleccione DNI, Carné de Extranjería o Pasaporte.</li>
+      <li><strong>Nro de Documento*</strong> — Ingrese su número (8 dígitos para DNI, 9 para Carné de Extranjería).</li>
+      <li>Haga clic en <strong>"Validar documento"</strong> para buscar sus datos automáticamente.</li>
+    </ol>
+
+    <div class="info-box">
+      Si la búsqueda es exitosa, los datos se completarán solos en la sección derecha. Si no, deberá ingresarlos manualmente.
+    </div>
+
+    <h4>Datos del solicitante (lado derecho)</h4>
+    <table>
+      <tr><th>Campo</th><th>Obligatorio</th><th>Descripción</th></tr>
+      <tr><td>Primer Apellido</td><td><span class="badge badge-yes">Sí</span></td><td>Apellido paterno</td></tr>
+      <tr><td>Segundo Apellido</td><td><span class="badge badge-yes">Sí</span></td><td>Apellido materno</td></tr>
+      <tr><td>Nombres</td><td><span class="badge badge-yes">Sí</span></td><td>Nombres completos</td></tr>
+      <tr><td>Ubigeo</td><td><span class="badge badge-yes">Sí</span></td><td>Digite para buscar departamento, provincia y distrito</td></tr>
+      <tr><td>Domicilio</td><td><span class="badge badge-yes">Sí</span></td><td>Dirección actual</td></tr>
+      <tr><td>Referencia</td><td><span class="badge badge-no">No</span></td><td>Referencia adicional del domicilio</td></tr>
+      <tr><td>Teléfono</td><td><span class="badge badge-no">No</span></td><td>Teléfono fijo</td></tr>
+      <tr><td>Celular</td><td><span class="badge badge-yes">Sí</span></td><td>Celular de contacto</td></tr>
+      <tr><td>Correo Electrónico</td><td><span class="badge badge-yes">Sí</span></td><td>Correo válido para notificaciones</td></tr>
+    </table>
+
+    <p>Para el campo <strong>Ubigeo</strong>, comience a escribir el nombre del departamento, provincia o distrito. El sistema buscará automáticamente las opciones disponibles.</p>
+
+    <p>Una vez completado, presione <strong>"Siguiente"</strong> para ir al paso 2.</p>
+
+    <h3 id="pn-paso2">Paso 2 — Documentos</h3>
+    <p>En este paso deberá adjuntar su documento y completar la información del trámite.</p>
+
+    <div class="screenshot">
+      <img src="../capturas/personanatural-paso2.png" alt="Persona Natural — Paso 2">
+      <div class="caption">Paso 2: Documentos con datos de ejemplo y archivo adjunto</div>
+    </div>
+
+    <h4>Datos del documento</h4>
+    <table>
+      <tr><th>Campo</th><th>Obligatorio</th><th>Descripción</th></tr>
+      <tr><td>Tipo Documento</td><td><span class="badge badge-yes">Sí</span></td><td>Tipo de documento administrativo que presenta</td></tr>
+      <tr><td>Asunto</td><td><span class="badge badge-yes">Sí</span></td><td>Motivo o tema del documento</td></tr>
+      <tr><td>Número de Documento</td><td><span class="badge badge-yes">Sí</span></td><td>Número del documento que adjunta</td></tr>
+    </table>
+
+    <h4>Archivo PDF</h4>
+    <ul>
+      <li>Haga clic en el área de carga para seleccionar un archivo <strong>PDF</strong></li>
+      <li><strong>Tamaño máximo:</strong> 30 MB</li>
+      <li>Una vez seleccionado, verá el nombre del archivo en color verde</li>
+    </ul>
+
+    <h4>Anexos (opcional)</h4>
+    <ul>
+      <li>Puede adjuntar archivos adicionales para complementar su trámite</li>
+      <li><strong>Tamaño máximo total:</strong> 450 MB</li>
+      <li>Se aceptan <strong>cualquier formato</strong></li>
+    </ul>
+
+    <p>Presione <strong>"Siguiente"</strong> para ir al paso final.</p>
+
+    <h3 id="pn-paso3">Paso 3 — Final</h3>
+
+    <div class="screenshot">
+      <img src="../capturas/personanatural-paso3.png" alt="Persona Natural — Paso 3">
+      <div class="caption">Paso 3: Resumen final y botón de envío</div>
+    </div>
+
+    <p>Verá el mensaje:</p>
+    <div class="info-box">
+      <em>"Proceso completado. Revise los datos ingresados y haga clic en Finalizar para enviar."</em>
+    </div>
+
+    <p>Revise que todos sus datos sean correctos. Si necesita corregir algo, presione <strong>"Atrás"</strong> para volver a los pasos anteriores. Cuando todo esté conforme, presione <strong>"Finalizar"</strong>.</p>
+
+    <div class="info-box important">
+      Durante el envío verá un mensaje "Guardando expediente..." con un indicador de carga. Espere sin cerrar el navegador.
+    </div>
+  </section>
+
+  <!-- 3. Persona Jurídica -->
+  <section id="pj">
+    <h2>3. Registro como Persona Jurídica</h2>
+    <p>El formulario también se compone de <strong>3 pasos</strong>.</p>
+
+    <div class="step-grid">
+      <div class="step"><span>1</span>Datos de la Empresa</div>
+      <div class="step"><span>2</span>Documentos</div>
+      <div class="step"><span>3</span>Final</div>
+    </div>
+
+    <h3 id="pj-paso1">Paso 1 — Datos de la Empresa</h3>
+
+    <div class="screenshot">
+      <img src="../capturas/personajuridica-paso1.png" alt="Persona Jurídica — Paso 1">
+      <div class="caption">Paso 1: Datos de la empresa con información de ejemplo</div>
+    </div>
+
+    <h4>Validación de identidad (lado izquierdo)</h4>
+    <ol>
+      <li><strong>Tipo de Documento*</strong> — La única opción disponible es <strong>RUC</strong>.</li>
+      <li><strong>Nro de Documento*</strong> — Ingrese el RUC de la empresa (11 dígitos).</li>
+      <li>Haga clic en <strong>"Validar documento"</strong> para buscar los datos automáticamente.</li>
+    </ol>
+
+    <h4>Datos de la empresa (lado derecho)</h4>
+    <table>
+      <tr><th>Campo</th><th>Obligatorio</th><th>Descripción</th></tr>
+      <tr><td>Razón Social</td><td><span class="badge badge-no">No</span></td><td>Nombre de la empresa (se completa automáticamente)</td></tr>
+      <tr><td>Ubigeo</td><td><span class="badge badge-yes">Sí</span></td><td>Digite para buscar departamento, provincia y distrito</td></tr>
+      <tr><td>Domicilio</td><td><span class="badge badge-yes">Sí</span></td><td>Dirección fiscal de la empresa</td></tr>
+      <tr><td>Referencia</td><td><span class="badge badge-no">No</span></td><td>Referencia adicional de la dirección</td></tr>
+      <tr><td>Teléfono</td><td><span class="badge badge-no">No</span></td><td>Teléfono de la empresa</td></tr>
+      <tr><td>Celular</td><td><span class="badge badge-yes">Sí</span></td><td>Celular de contacto</td></tr>
+      <tr><td>Correo Electrónico</td><td><span class="badge badge-yes">Sí</span></td><td>Correo válido para notificaciones</td></tr>
+    </table>
+
+    <p>Presione <strong>"Siguiente"</strong> para continuar.</p>
+
+    <h3 id="pj-paso2">Paso 2 — Documentos</h3>
+    <p>Los campos son idénticos a los del Paso 2 de Persona Natural:</p>
+    <ul>
+      <li><strong>Tipo Documento*</strong> — Seleccione el tipo de documento administrativo</li>
+      <li><strong>Asunto*</strong> — Motivo del trámite</li>
+      <li><strong>Número de Documento*</strong> — Número del documento que adjunta</li>
+      <li><strong>Archivo PDF*</strong> — Seleccione un archivo PDF (máx. 30 MB)</li>
+      <li><strong>Anexos (opcional)</strong> — Archivos adicionales (máx. 450 MB total)</li>
+    </ul>
+
+    <h3 id="pj-paso3">Paso 3 — Final</h3>
+    <p>Misma pantalla que Persona Natural. Revise los datos y presione <strong>"Finalizar"</strong> para enviar el expediente.</p>
+  </section>
+
+  <!-- 4. Confirmación -->
+  <section id="confirmacion">
+    <h2>4. Confirmación de Envío</h2>
+    <p>Cuando el envío sea exitoso, aparecerá una ventana emergente (modal) con la siguiente información:</p>
+
+    <div class="info-box success">
+      <strong>Título:</strong> Registro Exitoso<br>
+      <strong>Mensaje:</strong> "Documento Registrado exitosamente, en unos minutos recibirá un correo de confirmación con su número de expediente"
+    </div>
+
+    <p>Presione el botón <strong>"OK"</strong> para cerrar la ventana y ser redirigido automáticamente a la página de inicio.</p>
+
+    <div class="info-box important">
+      <strong>Importante:</strong> Recibirá un correo electrónico en la dirección que registró con el número de expediente asignado a su trámite.
+    </div>
+  </section>
+
+  <!-- 5. Requisitos -->
+  <section id="requisitos">
+    <h2>5. Requisitos y Validaciones</h2>
+
+    <h3>Formatos y tamaños</h3>
+    <table>
+      <tr><th>Elemento</th><th>Formato</th><th>Tamaño máximo</th></tr>
+      <tr><td>Documento principal</td><td>PDF</td><td>30 MB</td></tr>
+      <tr><td>Anexos</td><td>Cualquier formato</td><td>450 MB en total</td></tr>
+    </table>
+
+    <h3>Mensajes de error comunes</h3>
+    <table>
+      <tr><th>Situación</th><th>Mensaje</th></tr>
+      <tr><td>No selecciona tipo de documento</td><td>"Seleccione un tipo de documento"</td></tr>
+      <tr><td>No ingresa número de documento</td><td>"Ingrese un número de documento"</td></tr>
+      <tr><td>No adjunta archivo PDF</td><td>"Debe seleccionar un archivo PDF"</td></tr>
+      <tr><td>Archivo no es PDF</td><td>"Solo se permiten archivos PDF"</td></tr>
+      <tr><td>Archivo excede 30 MB</td><td>"El archivo no puede superar los 30MB"</td></tr>
+      <tr><td>Anexos exceden 450 MB</td><td>"Los anexos no pueden superar los 450MB en total"</td></tr>
+      <tr><td>Faltan campos obligatorios al finalizar</td><td>"Debe completar todos los campos obligatorios"</td></tr>
+      <tr><td>Error al buscar persona natural</td><td>"Persona no encontrada ingrese datos manualmente"</td></tr>
+      <tr><td>Error al buscar persona jurídica</td><td>"Persona jurídica no encontrada ingrese datos manualmente"</td></tr>
+    </table>
+  </section>
+
+  <!-- 6. FAQ -->
+  <section id="faq">
+    <h2>6. Preguntas Frecuentes</h2>
+
+    <h3>¿Puedo presentar documentos fuera del horario laboral?</h3>
+    <p>Sí. La plataforma está disponible 24/7. Los documentos presentados en días no hábiles se consideran recibidos el siguiente día hábil.</p>
+
+    <h3>¿Qué hago si los datos no se completan automáticamente?</h3>
+    <p>Ingrese la información manualmente. El sistema validará que todos los campos obligatorios estén completos.</p>
+
+    <h3>¿Puedo adjuntar más de un archivo?</h3>
+    <p>Sí. Puede adjuntar un archivo PDF principal (obligatorio) y múltiples anexos (opcional) de cualquier formato.</p>
+
+    <h3>¿Cómo sé que mi documento fue recibido?</h3>
+    <p>Aparecerá una ventana de confirmación con el mensaje "Registro Exitoso" y recibirá un correo electrónico con su número de expediente.</p>
+
+    <h3>¿Puedo corregir datos después de enviar?</h3>
+    <p>Una vez enviado el expediente no es posible modificarlo. Verifique todos los datos antes de presionar "Finalizar".</p>
+
+    <h3>¿Puedo volver al inicio sin terminar?</h3>
+    <p>Sí. En cualquier momento puede presionar el ícono de <strong>casa</strong> ubicado en la esquina superior derecha de la pantalla para regresar al inicio. Los datos ingresados no se guardarán.</p>
+  </section>
+
+</div>
+
+<footer>
+  Mesa de Partes Virtual — Manual de Usuario &copy; 2026
+</footer>
+
+</body>
+</html>

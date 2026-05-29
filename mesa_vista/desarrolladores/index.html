@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesa de Partes Virtual - Documentación Técnica</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --bg3: #334155;
+    --fg: #e2e8f0;
+    --fg2: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --orange: #fb923c;
+    --border: #334155;
+    --radius: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== SIDEBAR NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+    background: var(--bg2); border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 24px 16px; z-index: 100;
+  }
+  nav .nav-title {
+    font-size: 15px; font-weight: 700; color: var(--fg); margin-bottom: 4px;
+  }
+  nav .nav-sub {
+    font-size: 12px; color: var(--fg2); margin-bottom: 20px;
+  }
+  nav h2 {
+    font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--accent); margin: 20px 0 8px;
+  }
+  nav h2:first-of-type { margin-top: 0; }
+  nav a {
+    display: block; padding: 4px 8px; color: var(--fg2); text-decoration: none;
+    font-size: 13px; border-radius: 4px; transition: all .15s;
+  }
+  nav a:hover, nav a.active { color: var(--accent); background: rgba(56,189,248,.1); }
+  nav .sub { padding-left: 16px; font-size: 12px; }
+
+  /* ===== MAIN CONTENT ===== */
+  main { margin-left: 280px; padding: 40px 48px 80px; }
+
+  h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  h1 + p { color: var(--fg2); font-size: 16px; margin-bottom: 40px; }
+  h2 {
+    font-size: 24px; font-weight: 600; margin: 48px 0 16px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--border);
+    color: var(--accent);
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; color: var(--fg); }
+  h4 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; color: var(--fg2); }
+  p { margin-bottom: 12px; color: var(--fg2); }
+  ul, ol { margin: 8px 0 16px 20px; color: var(--fg2); }
+  li { margin-bottom: 4px; }
+  code {
+    background: var(--bg3); padding: 2px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px;
+  }
+  pre {
+    background: var(--bg3); padding: 16px; border-radius: var(--radius);
+    overflow-x: auto; margin: 12px 0 20px; border: 1px solid var(--border);
+  }
+  pre code { background: none; padding: 0; font-size: 13px; }
+
+  /* ===== TABLAS ===== */
+  table {
+    width: 100%; border-collapse: collapse; margin: 12px 0 20px;
+    font-size: 14px;
+  }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--fg); font-weight: 600; }
+  tr:hover td { background: rgba(56,189,248,.04); }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .3px;
+  }
+  .badge.get { background: rgba(59,130,246,.2); color: #60a5fa; }
+  .badge.post { background: rgba(74,222,128,.2); color: #4ade80; }
+  .badge.put { background: rgba(251,191,36,.2); color: #fbbf24; }
+  .badge.delete { background: rgba(248,113,113,.2); color: #f87171; }
+  .badge.public { background: rgba(129,140,248,.2); color: #a5b4fc; }
+  .badge.auth { background: rgba(56,189,248,.2); color: #38bdf8; }
+  .badge.admin { background: rgba(251,146,60,.2); color: #fb923c; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; margin: 12px 0 20px;
+  }
+  .card h4 { margin-top: 0; }
+
+  /* ===== PACKAGE GRID ===== */
+  .pkg-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px; margin: 12px 0 20px;
+  }
+  .pkg-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .pkg-card h4 { margin: 0 0 4px; font-size: 14px; }
+  .pkg-card p { font-size: 13px; margin: 0; }
+
+  /* ===== FLOW DIAGRAM ===== */
+  .flow-diagram {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; text-align: center;
+    margin: 16px 0 24px; font-size: 14px; line-height: 2.2;
+  }
+  .flow-step {
+    display: inline-block; background: var(--bg3); padding: 8px 16px;
+    border-radius: 6px; margin: 4px;
+  }
+  .flow-arrow { color: var(--accent); margin: 0 8px; font-size: 18px; }
+  .flow-cond { color: var(--yellow); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    main { margin-left: 0; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<nav>
+  <div class="nav-title">Mesa de Partes Virtual</div>
+  <div class="nav-sub">Documentación Técnica</div>
+
+  <h2>Introducción</h2>
+  <a href="#inicio">Inicio</a>
+  <a href="#stack">Stack Tecnológico</a>
+  <a href="#estructura">Estructura del Proyecto</a>
+
+  <h2>Arquitectura</h2>
+  <a href="#arquitectura">Diagrama de Componentes</a>
+  <a href="#flujo">Flujo de Registro</a>
+  <a href="#routes">Routing</a>
+
+  <h2>Componentes</h2>
+  <a href="#base">BaseMesaPartesComponent</a>
+  <a class="sub" href="#personanatural">Personanatural</a>
+  <a class="sub" href="#personajuridica">Personanajuridica</a>
+  <a class="sub" href="#documentos-step">DocumentosStepComponent</a>
+  <a class="sub" href="#mesapartes">Mesapartes (Landing)</a>
+
+  <h2>API</h2>
+  <a href="#api">Servicio API</a>
+  <a href="#endpoints">Endpoints</a>
+  <a href="#interceptor">Interceptor HTTP</a>
+
+  <h2>Datos</h2>
+  <a href="#modelos">Modelos</a>
+
+  <h2>Operaciones</h2>
+  <a href="#setup">Setup Local</a>
+  <a href="#deploy">Despliegue</a>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main>
+
+<h1 id="inicio">Mesa de Partes Virtual</h1>
+<p>Aplicación Angular para la presentación y registro de documentos administrativos.</p>
+
+<div class="card">
+  <strong>Framework:</strong> Angular 20 &nbsp;|&nbsp;
+  <strong>UI:</strong> PrimeNG 20 (Aura) &nbsp;|&nbsp;
+  <strong>CSS:</strong> Tailwind CSS 4 &nbsp;|&nbsp;
+  <strong>SSR:</strong> Express (producción) &nbsp;|&nbsp;
+  <strong>Tipo:</strong> Standalone Components
+</div>
+
+<!-- ===== STACK TECNOLÓGICO ===== -->
+<h2 id="stack">Stack Tecnológico</h2>
+
+<div class="pkg-grid">
+  <div class="pkg-card">
+    <h4>Angular 20</h4>
+    <p>Standalone components. Sin NgModules. Application builder.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>PrimeNG 20</h4>
+    <p>Stepper, Dialog, Select, Toast, Button, Card, InputText, Message.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>Tailwind CSS 4</h4>
+    <p>PostCSS plugin. Config en <code>src/assets/tailwind.css</code>.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>HttpClient Fetch</h4>
+    <p>Con interceptores funcionales para autenticación Bearer.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>Express (producción)</h4>
+    <p>Servidor Node.js que sirve el build en puerto 4200.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>TypeScript 5.8</h4>
+    <p>Modo estricto. Path alias <code>@/* → src/app/*</code>.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>Karma + Jasmine</h4>
+    <p>Testing unitario. <code>npm test</code> para ejecutar.</p>
+  </div>
+  <div class="pkg-card">
+    <h4>PrimeIcons 7</h4>
+    <p>Iconos utilizados en botones, menús y estados.</p>
+  </div>
+</div>
+
+<h3>Dependencias principales</h3>
+<table>
+  <tr><th>Dependencia</th><th>Versión</th><th>Propósito</th></tr>
+  <tr><td><code>@angular/core</code></td><td>^20</td><td>Framework base</td></tr>
+  <tr><td><code>primeng</code></td><td>^20</td><td>Componentes UI</td></tr>
+  <tr><td><code>@primeuix/themes</code></td><td>^1.2.1</td><td>Tema Aura</td></tr>
+  <tr><td><code>primeicons</code></td><td>^7.0.0</td><td>Iconos</td></tr>
+  <tr><td><code>tailwindcss</code></td><td>^4.1.11</td><td>Utilidades CSS</td></tr>
+  <tr><td><code>tailwindcss-primeui</code></td><td>^0.6.1</td><td>Integración Tailwind + PrimeNG</td></tr>
+  <tr><td><code>rxjs</code></td><td>~7.8.2</td><td>Programación reactiva</td></tr>
+  <tr><td><code>zone.js</code></td><td>~0.15.1</td><td>Detección de cambios</td></tr>
+  <tr><td><code>typescript</code></td><td>~5.8.3</td><td>Lenguaje</td></tr>
+  <tr><td><code>@angular/cli</code></td><td>^20</td><td>CLI de Angular</td></tr>
+</table>
+
+<!-- ===== ESTRUCTURA DEL PROYECTO ===== -->
+<h2 id="estructura">Estructura del Proyecto</h2>
+
+<pre><code>mesa_vista/
+├── angular.json
+├── package.json
+├── tsconfig.json
+├── vercel.json
+├── src/
+│   ├── main.ts                          # Punto de entrada
+│   ├── app.config.ts                     # Config. providers
+│   ├── app.routes.ts                     # Definición de rutas
+│   ├── serverMesaPartesVista.js.js       # Servidor Express
+│   ├── assets/
+│   │   ├── styles.scss                   # Entry de estilos
+│   │   ├── tailwind.css                  # Config Tailwind
+│   │   ├── layout/                       # Tema PrimeNG
+│   │   └── demo/                         # Estilos demo
+│   └── app/
+│       ├── app.component.ts
+│       └── mesapartesvirtual/
+│           ├── mesapartes/               # Landing page
+│           ├── modelos/                  # Interfaces y clases
+│           ├── paginas/
+│           │   ├── base-mesapartes.component.ts  # Clase abstracta
+│           │   ├── documentos-step/              # Componente reutilizable
+│           │   ├── personanatural/               # Formulario PN
+│           │   └── personanajuridica/            # Formulario PJ
+│           └── servicios/
+│               ├── apiService.ts                 # Llamadas HTTP
+│               └── mesapartes-interceptor.ts     # Interceptor Bearer
+└── manual/                                # Manual de usuario
+└── desarrolladores/                       # Esta documentación
+└── capturas/                              # Screenshots</code></pre>
+
+<!-- ===== ARQUITECTURA ===== -->
+<h2 id="arquitectura">Arquitectura</h2>
+
+<h3>Diagrama de herencia de componentes</h3>
+<div class="flow-diagram">
+  <span class="flow-step">BaseMesaPartesComponent</span><br>
+  <span class="flow-arrow">├──</span> <span class="flow-step">Personanatural</span><br>
+  <span class="flow-arrow">└──</span> <span class="flow-step">Personanajuridica</span><br><br>
+  <span class="flow-step">DocumentosStepComponent</span> <span class="flow-arrow">(reutilizado en pasos 2 y 3)</span><br>
+  <span class="flow-step">Mesapartes</span> <span class="flow-arrow">(independiente)</span>
+</div>
+
+<h3>Patrones</h3>
+<ul>
+  <li><strong>Base Class / Template Method:</strong> <code>BaseMesaPartesComponent</code> define la lógica compartida; las subclases implementan <code>initDocumentosIdentidad()</code> y sus propios <code>finalizar()</code>.</li>
+  <li><strong>Two-way binding personalizado:</strong> <code>DocumentosStepComponent</code> expone inputs con eventos <code>Change</code> para banana-in-a-box.</li>
+  <li><strong>Functional Interceptor:</strong> <code>HttpInterceptorFn</code> para inyección de token JWT.</li>
+  <li><strong>Standalone Components:</strong> Sin NgModules, cada componente declara sus propios imports.</li>
+</ul>
+
+<!-- ===== FLUJO DE REGISTRO ===== -->
+<h2 id="flujo">Flujo de Registro</h2>
+
+<div class="flow-diagram">
+  <span class="flow-step">Inicio</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Acepta términos</span>
+  <span class="flow-cond">[Sí]</span>
+  <span class="flow-arrow">→</span><br>
+  <span class="flow-step">Persona Natural</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 1: RENIEC</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 2: Documentos</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 3: Final</span><br>
+  <span class="flow-step">Persona Jurídica</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 1: SUNAT</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 2: Documentos</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Paso 3: Final</span><br><br>
+  <span class="flow-step">POST /api/public/expediente</span><br>
+  <span class="flow-cond">[Éxito]</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Diálogo "Registro Exitoso"</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">OK → Inicio</span><br>
+  <span class="flow-cond">[Error]</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Toast de error</span>
+</div>
+
+<table>
+  <tr><th>Paso</th><th>Componente</th><th>Contenido</th></tr>
+  <tr><td>1</td><td>Personanatural / Personanajuridica</td><td>Formulario + búsqueda RENIEC/SUNAT</td></tr>
+  <tr><td>2</td><td>DocumentosStepComponent (modo <code>documentos</code>)</td><td>Tipo doc., asunto, PDF, anexos</td></tr>
+  <tr><td>3</td><td>DocumentosStepComponent (modo <code>final</code>)</td><td>Resumen + botón Finalizar</td></tr>
+</table>
+
+<!-- ===== ROUTING ===== -->
+<h2 id="routes">Routing</h2>
+
+<p>Archivo: <code>src/app.routes.ts</code>. Rutas configuradas con <code>withInMemoryScrolling</code> (anchor scrolling + scroll restoration).</p>
+
+<table>
+  <tr><th>Ruta</th><th>Componente</th><th>Descripción</th></tr>
+  <tr><td><code>/</code></td><td>Mesapartes</td><td>Landing page</td></tr>
+  <tr><td><code>/mesapartes</code></td><td>Mesapartes</td><td>Alias de landing</td></tr>
+  <tr><td><code>/mesapartes/personanatural</code></td><td>Personanatural</td><td>Formulario 3 pasos</td></tr>
+  <tr><td><code>/mesapartes/personajuridica</code></td><td>Personanajuridica</td><td>Formulario 3 pasos</td></tr>
+  <tr><td><code>/notfound</code></td><td>Empty</td><td>Página 404</td></tr>
+  <tr><td><code>**</code></td><td>→ redirect</td><td>Redirige a <code>/notfound</code></td></tr>
+</table>
+
+<!-- ===== BASE ===== -->
+<h2 id="base">BaseMesaPartesComponent</h2>
+
+<p>Clase abstracta (<code>@Directive</code>) que provee la lógica compartida entre Persona Natural y Jurídica. Los servicios se inyectan con <code>inject()</code>.</p>
+
+<h3>Propiedades</h3>
+<table>
+  <tr><th>Propiedad</th><th>Tipo</th><th>Visible en template</th><th>Descripción</th></tr>
+  <tr><td><code>documentosIdentidad</code></td><td>TipoDocumentoIdentidad[]</td><td>Sí</td><td>Tipos de doc. de identidad</td></tr>
+  <tr><td><code>listaubigeo</code></td><td>Ubigeo[]</td><td>Sí</td><td>Resultados de búsqueda</td></tr>
+  <tr><td><code>listaTipoDocumento</code></td><td>any[]</td><td>Sí</td><td>Tipos de doc. administrativo</td></tr>
+  <tr><td><code>selectedDocumentoIdentidad</code></td><td>TipoDocumentoIdentidad</td><td>Sí</td><td>Doc. identidad seleccionado</td></tr>
+  <tr><td><code>selectedTipoDocumento</code></td><td>TipoDocumento</td><td>Sí</td><td>Doc. admin. seleccionado</td></tr>
+  <tr><td><code>selectedUbigeo</code></td><td>Ubigeo</td><td>Sí</td><td>Ubigeo seleccionado</td></tr>
+  <tr><td><code>asunto</code></td><td>string</td><td>Sí</td><td>Asunto del trámite</td></tr>
+  <tr><td><code>numDoc</code></td><td>string</td><td>Sí</td><td>Número de documento</td></tr>
+  <tr><td><code>archivo</code></td><td>File | null</td><td>Sí</td><td>Archivo PDF principal</td></tr>
+  <tr><td><code>anexos</code></td><td>File[]</td><td>Sí</td><td>Archivos anexos</td></tr>
+</table>
+
+<h3>Métodos principales</h3>
+<table>
+  <tr><th>Método</th><th>Acceso</th><th>Descripción</th></tr>
+  <tr><td><code>cargarTiposDocumento()</code></td><td>public</td><td>GET /api/public/listaTipoDocumento</td></tr>
+  <tr><td><code>onFileSelected(event)</code></td><td>public</td><td>Valida PDF (formato + ≤30MB)</td></tr>
+  <tr><td><code>onAnexosSelected(event)</code></td><td>public</td><td>Valida anexos (≤450MB total)</td></tr>
+  <tr><td><code>buscarUbigeo(event)</code></td><td>public</td><td>GET /reniec/listar?q= (mín. 2 chars)</td></tr>
+  <tr><td><code>irAlSiguientePaso(form, cb, step)</code></td><td>public</td><td>Valida NgForm y avanza en stepper</td></tr>
+  <tr><td><code>irAlSiguientePasoDesdeHijo(cb, step)</code></td><td>public</td><td>Valida sin NgForm (hijo)</td></tr>
+  <tr><td><code>getUbigeoParts()</code></td><td>protected</td><td>Extrae DDDDPPPP del código ubigeo</td></tr>
+  <tr><td><code>navegarAlInicio()</code></td><td>protected</td><td>Toast éxito + redirect tras 1.5s</td></tr>
+  <tr><td><code>volverAlInicio()</code></td><td>public</td><td>Redirect inmediato a /mesapartes</td></tr>
+</table>
+
+<h3>Validaciones en base</h3>
+<table>
+  <tr><th>Validación</th><th>Lugar</th><th>Detalle</th></tr>
+  <tr><td>Archivo PDF</td><td><code>onFileSelected</code></td><td>Solo PDF, máximo 30MB</td></tr>
+  <tr><td>Anexos</td><td><code>onAnexosSelected</code></td><td>Cualquier formato, máximo 450MB total</td></tr>
+  <tr><td>Ubigeo</td><td><code>buscarUbigeo</code></td><td>Mínimo 2 caracteres para buscar</td></tr>
+  <tr><td>Campos paso 3</td><td><code>irAlSiguientePaso</code></td><td>PDF requerido, asunto requerido, numDoc requerido</td></tr>
+</table>
+
+<!-- ===== PERSONA NATURAL ===== -->
+<h2 id="personanatural">Personanatural</h2>
+
+<p>Extiende <code>BaseMesaPartesComponent</code>. Gestiona el registro de personas naturales con DNI, Carné de Extranjería o Pasaporte.</p>
+
+<h3>Propiedades</h3>
+<table>
+  <tr><th>Propiedad</th><th>Tipo</th><th>Descripción</th></tr>
+  <tr><td><code>persona</code></td><td>Persona</td><td>Datos de la persona</td></tr>
+  <tr><td><code>loading</code></td><td>boolean</td><td>Estado de carga durante envío</td></tr>
+  <tr><td><code>showSuccessDialog</code></td><td>boolean</td><td>Control diálogo de éxito</td></tr>
+  <tr><td><code>documentoLength</code></td><td>getter: number</td><td>9 si Carné Ext., 8 en otro caso</td></tr>
+</table>
+
+<h3>Métodos</h3>
+<table>
+  <tr><th>Método</th><th>Descripción</th></tr>
+  <tr><td><code>initDocumentosIdentidad()</code></td><td>Establece DNI y Carné de Extranjería</td></tr>
+  <tr><td><code>onSubmitReniec(form)</code></td><td>GET /reniec/buscar?dni=</td></tr>
+  <tr><td><code>asignarUbigeo()</code></td><td>Asigna código ubigeo a persona</td></tr>
+  <tr><td><code>finalizar()</code></td><td>Construye payload y llama postExpediente</td></tr>
+  <tr><td><code>cerrarDialogoYRedirigir()</code></td><td>Cierra diálogo y navega al inicio</td></tr>
+</table>
+
+<h3>Payload de envío</h3>
+<pre><code>{
+  documento: {
+    nuDoc: string,
+    deAsu: string,
+    deObservacion: "",
+    coTipDocAdm: string         // código o "001"
+  },
+  expediente: {
+    nuAnnExp: string,            // año actual (YYYY)
+    coTipoExp: "20"
+  },
+  remitente: {
+    nuDni: string,
+    nuRuc: "",
+    coOtros: "",
+    telefono: string,
+    idDepartamento: string,      // 2 dígitos
+    idProvincia: string,         // 2 dígitos
+    idDistrito: string,          // 2 dígitos
+    deCorreo: string,
+    deDireccion: string,
+    apePaterno: string,
+    apeMaterno: string,
+    nombre: string
+  }
+}</code></pre>
+
+<!-- ===== PERSONA JURÍDICA ===== -->
+<h2 id="personajuridica">Personanajuridica</h2>
+
+<p>Extiende <code>BaseMesaPartesComponent</code>. Gestiona el registro de empresas con RUC.</p>
+
+<h3>Propiedades</h3>
+<table>
+  <tr><th>Propiedad</th><th>Tipo</th><th>Descripción</th></tr>
+  <tr><td><code>empresa</code></td><td>Empresa</td><td>Datos de la empresa</td></tr>
+  <tr><td><code>loading</code></td><td>boolean</td><td>Estado de carga</td></tr>
+  <tr><td><code>showSuccessDialog</code></td><td>boolean</td><td>Control diálogo de éxito</td></tr>
+</table>
+
+<h3>Métodos</h3>
+<table>
+  <tr><th>Método</th><th>Descripción</th></tr>
+  <tr><td><code>initDocumentosIdentidad()</code></td><td>Establece solo RUC</td></tr>
+  <tr><td><code>onSubmitSunat(form)</code></td><td>GET /api/public/buscar?ruc=</td></tr>
+  <tr><td><code>asignarUbigeo()</code></td><td>Asigna código ubigeo a empresa</td></tr>
+  <tr><td><code>finalizar()</code></td><td>Construye payload con empresa y llama postExpediente</td></tr>
+  <tr><td><code>cerrarDialogoYRedirigir()</code></td><td>Cierra diálogo y navega al inicio</td></tr>
+</table>
+
+<h3>Payload de envío (diferencias con PN)</h3>
+<pre><code>{
+  remitente: {
+    nuDni: "",
+    nuRuc: string,              // RUC de la empresa
+    deNomOtrosRes: string       // razón social
+    // ... mismo resto que PN
+  }
+}</code></pre>
+
+<!-- ===== DOCUMENTOS-STEP ===== -->
+<h2 id="documentos-step">DocumentosStepComponent</h2>
+
+<p>Componente reutilizable para los pasos 2 y 3 del stepper. Usa two-way binding personalizado.</p>
+
+<h3>Inputs / Outputs</h3>
+<table>
+  <tr><th>Input</th><th>Output</th><th>Tipo</th><th>Descripción</th></tr>
+  <tr><td><code>listaTipoDocumento</code></td><td>—</td><td>any[]</td><td>Catálogo de tipos</td></tr>
+  <tr><td><code>selectedTipoDocumento</code></td><td><code>selectedTipoDocumentoChange</code></td><td>any</td><td>Two-way binding</td></tr>
+  <tr><td><code>asunto</code></td><td><code>asuntoChange</code></td><td>string</td><td>Two-way binding</td></tr>
+  <tr><td><code>numDoc</code></td><td><code>numDocChange</code></td><td>string</td><td>Two-way binding</td></tr>
+  <tr><td><code>archivo</code></td><td>—</td><td>File | null</td><td>Solo lectura</td></tr>
+  <tr><td><code>anexos</code></td><td>—</td><td>File[]</td><td>Solo lectura</td></tr>
+  <tr><td><code>modo</code></td><td>—</td><td>'documentos' | 'final'</td><td>Modo de visualización</td></tr>
+  <tr><td><code>loading</code></td><td>—</td><td>boolean</td><td>Spinner en modo final</td></tr>
+  <tr><td><code>activateCallback</code></td><td>—</td><td>Function</td><td>Callback para cambiar paso</td></tr>
+  <tr><td><code>pasoPrevio</code></td><td>—</td><td>number</td><td>Paso anterior (botón Atrás)</td></tr>
+  <tr><td>—</td><td><code>fileSelected</code></td><td>EventEmitter</td><td>Selección de PDF</td></tr>
+  <tr><td>—</td><td><code>anexosSelected</code></td><td>EventEmitter</td><td>Selección de anexos</td></tr>
+  <tr><td>—</td><td><code>siguiente</code></td><td>EventEmitter&lt;void&gt;</td><td>Click Siguiente</td></tr>
+  <tr><td>—</td><td><code>finalizar</code></td><td>EventEmitter&lt;void&gt;</td><td>Click Finalizar</td></tr>
+</table>
+
+<!-- ===== MESAPARTES ===== -->
+<h2 id="mesapartes">Mesapartes (Landing)</h2>
+
+<p>Componente de la página de inicio. Sin relación de herencia con la base.</p>
+
+<table>
+  <tr><th>Propiedad</th><th>Tipo</th><th>Descripción</th></tr>
+  <tr><td><code>aceptarTerminos</code></td><td>boolean</td><td>Estado del checkbox</td></tr>
+  <tr><td><code>mostrarTerminos</code></td><td>boolean</td><td>Visibilidad del modal</td></tr>
+</table>
+
+<!-- ===== API ===== -->
+<h2 id="api">Servicio API</h2>
+
+<p>Servicio singleton (<code>providedIn: 'root'</code>) en <code>apiService.ts</code>. URL base hardcodeada:</p>
+
+<pre><code>private apiUrl = 'http://sgd.emapat.com.pe:9000';
+// Alternativa: 'http://localhost:9000'</code></pre>
+
+<h2 id="endpoints">Endpoints</h2>
+
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Auth</th><th>Descripción</th></tr>
+  <tr>
+    <td><span class="badge get">GET</span></td>
+    <td><code>{apiUrl}/reniec/buscar?dni={dni}</code></td>
+    <td><span class="badge public">Public</span></td>
+    <td>Busca persona natural por DNI</td>
+  </tr>
+  <tr>
+    <td><span class="badge get">GET</span></td>
+    <td><code>{apiUrl}/api/public/buscar?ruc={ruc}</code></td>
+    <td><span class="badge public">Public</span></td>
+    <td>Busca persona jurídica por RUC</td>
+  </tr>
+  <tr>
+    <td><span class="badge get">GET</span></td>
+    <td><code>{apiUrl}/api/public/listaTipoDocumento</code></td>
+    <td><span class="badge public">Public</span></td>
+    <td>Catálogo de tipos de documento</td>
+  </tr>
+  <tr>
+    <td><span class="badge get">GET</span></td>
+    <td><code>{apiUrl}/reniec/listar?q={texto}</code></td>
+    <td><span class="badge public">Public</span></td>
+    <td>Busca ubigeo (mín. 2 caracteres)</td>
+  </tr>
+  <tr>
+    <td><span class="badge post">POST</span></td>
+    <td><code>{apiUrl}/api/public/expediente</code></td>
+    <td><span class="badge public">Public</span></td>
+    <td>Envía expediente (multipart/form-data)</td>
+  </tr>
+</table>
+
+<h3>postExpediente — Detalle del multipart</h3>
+<table>
+  <tr><th>Campo FormData</th><th>Valor</th></tr>
+  <tr><td><code>mpv</code></td><td>Blob JSON con payload del expediente</td></tr>
+  <tr><td><code>file</code></td><td>Archivo PDF principal</td></tr>
+  <tr><td><code>anexos[i]</code></td><td>Archivos anexos (0 a n)</td></tr>
+</table>
+
+<!-- ===== INTERCEPTOR ===== -->
+<h2 id="interceptor">Interceptor HTTP</h2>
+
+<p>Interceptor funcional (<code>HttpInterceptorFn</code>) en <code>mesapartes-interceptor.ts</code>. Inyecta token Bearer en todas las peticiones excepto en endpoints públicos.</p>
+
+<pre><code>const token = 'sk_7825.jyG4d88J0cttJU8q2gxstx1y2kqgc29E';</code></pre>
+
+<h3>Endpoints públicos (sin token)</h3>
+<ul>
+  <li>URLs que contengan <code>/reniec</code></li>
+  <li>URLs que contengan <code>/api/auth/login</code></li>
+  <li>URLs que contengan <code>/api/auth/register</code></li>
+  <li>URLs que contengan <code>api/public/</code></li>
+</ul>
+
+<h3>Registro</h3>
+<pre><code>// app.config.ts
+provideHttpClient(withFetch(), withInterceptors([mesapartesInterceptor]))</code></pre>
+
+<!-- ===== MODELOS ===== -->
+<h2 id="modelos">Modelos de Datos</h2>
+
+<h3>Persona</h3>
+<pre><code>class Persona {
+  first_name: string          // Nombres
+  first_last_name: string     // Primer apellido
+  second_last_name: string    // Segundo apellido
+  document_number: string     // Número de DNI
+  referencia: string          // Ref. domicilio
+  telefono: string            // Teléfono fijo
+  celular: string             // Celular
+  correo: string              // Correo electrónico
+  full_name: string           // Nombre completo
+  domicilio: string           // Dirección
+  ubigeo: string              // Código ubigeo (6 dígitos)
+}</code></pre>
+
+<h3>Empresa</h3>
+<pre><code>class Empresa {
+  numero_documento: string    // RUC
+  razon_social: string        // Razón social
+  nombre_comercial: string    // Nombre comercial
+  estado: string              // Estado SUNAT
+  condicion: string           // Condición SUNAT
+  direccion: string           // Dirección fiscal
+  ubigeo: string              // Código ubigeo
+  departamento: string
+  provincia: string
+  distrito: string
+  referencia: string
+  telefono: string
+  celular: string
+  correo: string
+}</code></pre>
+
+<h3>Interfaces</h3>
+<table>
+  <tr><th>Interface</th><th>Propiedades</th></tr>
+  <tr><td><code>TipoDocumentoIdentidad</code></td><td><code>name: string</code>, <code>code: string</code></td></tr>
+  <tr><td><code>TipoDocumento</code></td><td><code>cdocTipdoc</code>, <code>cdocDesdoc?</code>, <code>cdocIndbaj?</code>, <code>fdocFecbaj?</code>, <code>cdocGrupo?</code>, <code>inNumeracion?</code>, <code>inTipoFirma?</code>, <code>inDocSalida?</code>, <code>inMultiple?</code></td></tr>
+  <tr><td><code>Ubigeo</code></td><td><code>id</code>, <code>nomdep</code>, <code>nomprov</code>, <code>nomdis</code>, <code>nombreCompleto</code></td></tr>
+</table>
+
+<!-- ===== SETUP ===== -->
+<h2 id="setup">Setup Local</h2>
+
+<h3>Requisitos</h3>
+<ul>
+  <li>Node.js 20+</li>
+  <li>npm 10+</li>
+  <li>Angular CLI 20 (<code>npm install -g @angular/cli</code>)</li>
+</ul>
+
+<h3>Pasos</h3>
+<pre><code>git clone &lt;repo-url&gt;
+cd mesa_vista
+npm install
+npm start                     # ng serve → http://localhost:4200</code></pre>
+
+<h3>Testing</h3>
+<pre><code>npm test                      # ng test (Karma + Jasmine)</code></pre>
+
+<h3>Formato de código</h3>
+<pre><code>npm run format                # Prettier</code></pre>
+
+<!-- ===== DEPLOY ===== -->
+<h2 id="deploy">Despliegue</h2>
+
+<h3>Build de producción</h3>
+<pre><code>npm run build                 # → dist/sakai-ng/browser/</code></pre>
+
+<h3>Vercel</h3>
+<p>El proyecto incluye <code>vercel.json</code> con rewrites SPA:</p>
+<pre><code>{
+  "rewrites": [
+    { "source": "/:path*", "destination": "/index.html" }
+  ],
+  "trailingSlash": false
+}</code></pre>
+
+<h3>Servidor Express</h3>
+<p>Archivo <code>serverMesaPartesVista.js.js</code> disponible en la raíz. Sirve el build en puerto 4200:</p>
+<pre><code>node src/serverMesaPartesVista.js.js
+# Angular servido en http://0.0.0.0:4200</code></pre>
+
+<h3>Variables de entorno</h3>
+<p>No existen archivos <code>environment.ts</code>. La URL de la API y el token están hardcodeados:</p>
+<ul>
+  <li><code>apiService.ts</code>: <code>private apiUrl = 'http://sgd.emapat.com.pe:9000'</code></li>
+  <li><code>mesapartes-interceptor.ts</code>: <code>const token = 'sk_7825.jyG4d88J0cttJU8q2gxstx1y2kqgc29E'</code></li>
+</ul>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,42 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Mesa de Partes Virtual" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Presenta tus documentos de forma segura y rápida
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: 
+      - paragraph [ref=e12]: "Información Importante:"
+    - list [ref=e13]:
+      - listitem [ref=e14]:
+        - generic [ref=e15]: 
+        - generic [ref=e16]:
+          - text: Puede hacer uso de nuestra Mesa de Partes Virtual los
+          - strong [ref=e17]: siete días de la semana
+          - text: ", las"
+          - strong [ref=e18]: 24 horas del día
+          - text: .
+      - listitem [ref=e19]:
+        - generic [ref=e20]: 
+        - generic [ref=e21]:
+          - text: Los documentos presentados entre las
+          - strong [ref=e22]: 00:00
+          - text: y las
+          - strong [ref=e23]: 23:59 horas
+          - text: de un día hábil serán considerados como presentados ese mismo día hábil.
+      - listitem [ref=e24]:
+        - generic [ref=e25]: 
+        - generic [ref=e26]:
+          - text: Los documentos presentados los
+          - strong [ref=e27]: sábados, domingos, feriados
+          - text: o cualquier otro día no hábil serán considerados como presentados el siguiente día hábil.
+  - generic [ref=e28]:
+    - generic [ref=e29]:
+      - checkbox [ref=e30] [cursor=pointer]
+      - generic [ref=e31] [cursor=pointer]: He leído y acepto los términos y condiciones *
+    - generic [ref=e32]:
+      - button "Continuar como Persona Natural" [disabled] [ref=e33]:
+        - generic [ref=e34]: 
+        - generic [ref=e35]: Continuar como Persona Natural
+      - button "Continuar como Persona Jurídica" [disabled] [ref=e36]:
+        - generic [ref=e37]: 
+        - generic [ref=e38]: Continuar como Persona Jurídica
