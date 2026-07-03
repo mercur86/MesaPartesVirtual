@@ -5,7 +5,7 @@ const fs = require('fs');
 const app = express();
 const port = 4200;
 
-const angularAppPath = path.join(__dirname, 'dist/sakai-ng/browser');
+const angularAppPath = path.join(__dirname, '..', 'dist', 'sakai-ng', 'browser');
 
 const sslDir = path.join(__dirname, '..', 'ssl');
 const sslOptions = {

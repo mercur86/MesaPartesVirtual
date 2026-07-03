@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class Api {
   //private apiUrl = 'http://localhost:9000';
-  private apiUrl = 'http://sgd.emapat.com.pe:9000';
+  private apiUrl = 'https://sgd.emapat.com.pe:9000';
 
   private http = inject(HttpClient);
   constructor() { }
