@@ -6,9 +6,11 @@ import com.emtap.mesapartes.entity.mesapartes.Remito;
 import com.emtap.mesapartes.repository.mesapartes.ExpedienteRepository;
 import com.emtap.mesapartes.repository.mesapartes.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +22,9 @@ public class ExpedienteDecisionService {
     private final ExpedienteRepository expedienteRepository;
     private final EmailService emailService;
     private final EmailTemplateLoader templateLoader;
+
+    @Value("${remito.estado-documento-rechazo:09}")
+    private String estadoDocumentoRechazo;
 
     public ExpedienteDecisionService(
             RemitoRepository remitoRepository,
@@ -39,6 +44,21 @@ public class ExpedienteDecisionService {
 
     @Transactional
     public String procesarRechazo(String nuAnn, String nuEmi, String motivo) {
+        try {
+            Optional<Remito> remitoOpt = remitoRepository.findByAnioAndNumeroEmision(nuAnn, nuEmi);
+            if (remitoOpt.isPresent()) {
+                Remito remito = remitoOpt.get();
+                remito.setEstadoDocumentoEmision(estadoDocumentoRechazo);
+                remito.setFechaModifica(LocalDateTime.now());
+                remitoRepository.save(remito);
+                log.info("Remito nuAnn={} nuEmi={} — rechazo confirmado, estadoDocumentoEmision actualizado a {}",
+                        nuAnn, nuEmi, estadoDocumentoRechazo);
+            } else {
+                log.warn("No se encontró remito nuAnn={} nuEmi={} al confirmar rechazo", nuAnn, nuEmi);
+            }
+        } catch (Exception e) {
+            log.error("Error al actualizar estado del remito al confirmar rechazo: {}", e.getMessage());
+        }
         return procesarDecision(nuAnn, nuEmi, false, motivo);
     }
 
@@ -92,6 +112,7 @@ public class ExpedienteDecisionService {
         }
     }
 
+    @Transactional
     public String generarFormularioRechazo(String nuAnn, String nuEmi) {
         String actionUrl = "/api/public/expediente/" + nuAnn + "/" + nuEmi + "/rechazar";
         return templateLoader.cargarSinEscape("formulario-rechazo.html", Map.of(

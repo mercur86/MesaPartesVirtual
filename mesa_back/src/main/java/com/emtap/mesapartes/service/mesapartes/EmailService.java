@@ -42,8 +42,8 @@ public class EmailService {
     @Value("${app.correo.mesapartes}")
     private String correoMesapartes;
 
-    // URL del portal de consulta de expedientes
-    private static final String URL_CONSULTA = "https://sgd.epsgrau.pe:8181/consulta/inicio.do";
+    @Value("${app.url-consulta}")
+    private String URL_CONSULTA;
 
     public EmailService(
             @Qualifier("tramiteMailSender") JavaMailSender tramiteMailSender,
